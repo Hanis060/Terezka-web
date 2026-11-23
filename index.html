@@ -527,7 +527,7 @@
     e.preventDefault();
     const btn=f.querySelector('button');btn.disabled=true;btn.textContent='Odesílám…';st.className='status';st.textContent='';
     try{
-      const r=await fetch('https://formsubmit.co/ajax/adamekhanousek1234@gmail.com',{
+      const r=await fetch('https://formsubmit.co/ajax/3c969fd54016dfe3f37e240bab0e0558',{
         method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
         body:JSON.stringify(Object.fromEntries(new FormData(f)))
       });
