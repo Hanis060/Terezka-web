@@ -233,6 +233,14 @@
   .modal .close{position:absolute;top:8px;right:16px;background:none;border:0;font-size:2rem;color:#b3123f;cursor:pointer}
   canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:300}
 
+  .anniv{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+  .pill{padding:12px 22px;border-radius:999px;background:rgba(255,77,121,.12);border:1px solid rgba(255,143,171,.35);color:var(--cream);font-size:.98rem}
+  .pill b{color:var(--rose2);font-family:'Playfair Display',serif;font-size:1.15rem}
+  .vzkaz{padding:70px 0 40px}
+  .gbhint{color:var(--muted);text-align:center;font-size:.95rem}
+  .gblist{max-width:640px;margin:26px auto 0;display:grid;gap:12px}
+  .gbitem{padding:16px 20px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,143,171,.2)}
+  .gbitem small{color:var(--rose2)}.gbitem p{margin-top:4px}
   /* reveal */
   .rv{opacity:0;transform:translateY(40px);transition:opacity 1s,transform 1s}
   .rv.in{opacity:1;transform:none}
@@ -274,7 +282,7 @@
 <canvas id="hearts"></canvas>
 <nav class="nav" id="nav">
   <a href="#top" class="logo script">♥ my dva</a>
-  <div><a href="#cas">Spolu</a><a href="#pribeh">Příběh</a><a href="#osa">Osa</a><a href="#galerie">Galerie</a><a href="#date" class="cta">Domluvit date</a></div>
+  <div><a href="#cas">Spolu</a><a href="#pribeh">Příběh</a><a href="#osa">Osa</a><a href="#galerie">Galerie</a><a href="#vzkaz">Vzkaz</a><a href="#date" class="cta">Domluvit date</a></div>
 </nav>
 
 <section class="hero" id="top">
@@ -296,6 +304,7 @@
       <div class="box"><b id="c-m">–</b><small>minut</small></div>
       <div class="box"><b id="c-s">–</b><small>sekund</small></div>
     </div>
+    <div class="anniv"><div class="pill" id="anniv"></div><div class="pill" id="weeks"></div></div>
   </div>
 </section>
 
@@ -441,6 +450,31 @@
   </div>
 </section>
 
+<section class="vzkaz" id="vzkaz">
+  <div class="wrap">
+    <div class="title rv">
+      <div class="script">jen pro mě</div>
+      <h2>Kniha návštěv</h2>
+      <div class="line"></div>
+    </div>
+    <form class="dform rv" id="gbForm">
+      <input type="hidden" name="_subject" value="Nový vzkaz v knize návštěv ♥">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+      <p class="gbhint">Napiš mi, co si myslíš o webu, nebo jen něco hezkého. Vzkaz mi přijde rovnou na e-mail ♥</p>
+      <label>Podpis<input name="jmeno" required placeholder="Kdo píše?"></label>
+      <label>Nálada
+        <select name="nalada"><option>♥ zamilovaná</option><option>😊 šťastná</option><option>🥹 dojatá</option><option>😂 pobavená</option><option>😘 plná pusinek</option></select>
+      </label>
+      <label>Vzkaz<textarea name="vzkaz" rows="4" required placeholder="Sem napiš svůj vzkaz…"></textarea></label>
+      <button type="submit">Zapsat do knihy ♥</button>
+      <p class="status" id="gbStatus" role="status"></p>
+    </form>
+    <div class="gblist" id="gbList"></div>
+  </div>
+</section>
+
 <section class="letter">
   <div class="wrap rv">
     <div class="paper">
@@ -504,15 +538,22 @@
   })();
 })();
 
-/* počítadlo – spolu od 5. 6. */
+/* počítadlo – spolu od 5. 6. 2026 */
 (()=>{
-  const now=new Date();let y=now.getFullYear();
-  let t=new Date(y,5,5);if(t>now)t=new Date(y-1,5,5);
+  const t=new Date(2026,5,5);
   const set=(id,v)=>document.getElementById(id).textContent=v;
+  const ord=n=>n+'. výročí';
   function tick(){
-    const s=Math.max(0,Math.floor((new Date()-t)/1000));
+    const now=new Date(),s=Math.max(0,Math.floor((now-t)/1000));
     set('c-d',Math.floor(s/86400));set('c-h',Math.floor(s%86400/3600));
     set('c-m',Math.floor(s%3600/60));set('c-s',s%60);
+    const k=Math.max(0,now.getFullYear()-2026-((now.getMonth()<5||(now.getMonth()==5&&now.getDate()<5))?1:0));
+    let nx=new Date(2026+k+1,5,5);
+    const left=Math.ceil((nx-now)/86400000);
+    const lw=document.getElementById('anniv'),ww=document.getElementById('weeks');
+    lw.innerHTML=left<=0?'Dnes máme <b>výročí</b> ♥':'Do <b>'+ord(k+1)+'</b> zbývá <b>'+left+'</b> '+(left==1?'den':left<5?'dny':'dní');
+    const w=Math.floor((now-t)/604800000);
+    ww.innerHTML='Už jsme spolu <b>'+w+'</b> '+(w==1?'týden':w<5&&w>0?'týdny':'týdnů');
   }
   tick();setInterval(tick,1000);
 })();
@@ -620,6 +661,29 @@
   }
   btn.addEventListener('click',()=>{burst();setTimeout(burst,350);modal.classList.add('open')});
   modal.addEventListener('click',e=>{if(e.target===modal||e.target.classList.contains('close'))modal.classList.remove('open')});
+})();
+
+/* kniha návštěv */
+(()=>{
+  const f=document.getElementById('gbForm'),st=document.getElementById('gbStatus'),list=document.getElementById('gbList');
+  if(!f)return;
+  const K='gbSent';let L=[];try{L=JSON.parse(localStorage.getItem(K)||'[]')}catch(e){}
+  const esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  function draw(){list.innerHTML=L.map(m=>'<div class="gbitem"><small>'+esc(m.nalada)+' · '+esc(m.jmeno)+' · '+esc(m.datum)+'</small><p>'+esc(m.vzkaz)+'</p></div>').join('')}
+  draw();
+  f.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const btn=f.querySelector('button');btn.disabled=true;btn.textContent='Zapisuju…';st.className='status';st.textContent='';
+    const d=Object.fromEntries(new FormData(f));
+    try{
+      const r=await fetch('https://formsubmit.co/ajax/3c969fd54016dfe3f37e240bab0e0558',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(d)});
+      const j=await r.json();if(!r.ok||j.success==='false')throw 0;
+      L.unshift({jmeno:d.jmeno,nalada:d.nalada,vzkaz:d.vzkaz,datum:new Date().toLocaleDateString('cs-CZ')});
+      try{localStorage.setItem(K,JSON.stringify(L.slice(0,20)))}catch(_){}
+      draw();f.reset();st.className='status ok';st.textContent='Zapsáno! Děkuju za vzkaz ♥';
+    }catch(err){st.className='status err';st.textContent='Něco se nepovedlo, zkus to prosím znovu.'}
+    btn.disabled=false;btn.textContent='Zapsat do knihy ♥';
+  });
 })();
 
 /* reveal on scroll */
