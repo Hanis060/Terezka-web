@@ -118,6 +118,49 @@
   .lb button:hover{opacity:1;color:var(--rose2)}
   .lb .x{top:10px;right:16px}.lb .p{left:10px;top:50%}.lb .n{right:10px;top:50%}
 
+
+  /* NAV */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;
+    padding:12px 22px;backdrop-filter:blur(14px);background:rgba(26,11,18,.55);border-bottom:1px solid rgba(255,143,171,.15)}
+  .nav .logo{font-size:1.6rem;color:var(--rose2);text-decoration:none}
+  .nav div{display:flex;gap:6px;align-items:center}
+  .nav a{color:var(--cream);text-decoration:none;font-size:.9rem;padding:6px 12px;border-radius:999px;transition:.3s}
+  .nav a:hover{color:var(--rose2)}
+  .nav a.cta{background:linear-gradient(135deg,var(--rose),#ff7a9c);color:#fff;font-weight:500;box-shadow:0 6px 20px rgba(255,77,121,.4)}
+  .nav a.cta:hover{color:#fff;transform:translateY(-1px)}
+  @media(max-width:620px){.nav div a:not(.cta){display:none}}
+  section[id]{scroll-margin-top:60px}
+
+  /* extra polish */
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(circle at 15% 20%,rgba(255,77,121,.14),transparent 45%),
+               radial-gradient(circle at 85% 70%,rgba(243,201,139,.09),transparent 45%)}
+  .hero h1{background:linear-gradient(120deg,#fff 30%,var(--rose2) 70%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 6px 30px rgba(255,77,121,.5))}
+  .hero h1 span{-webkit-text-fill-color:var(--rose)}
+  .scroll{border:1px solid rgba(255,255,255,.35);padding:10px 26px;border-radius:999px;backdrop-filter:blur(6px);background:rgba(255,255,255,.08)}
+  .title h2{background:linear-gradient(120deg,var(--cream),var(--rose2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .title .line{height:3px;border-radius:3px}
+  .box{backdrop-filter:blur(8px);transition:transform .4s}.box:hover{transform:translateY(-6px)}
+
+  /* DATE FORM */
+  .date{padding:90px 0}
+  .dform{max-width:640px;margin:0 auto;padding:36px 34px;border-radius:26px;display:grid;gap:18px;
+    background:linear-gradient(160deg,rgba(45,20,34,.9),rgba(31,14,23,.9));border:1px solid rgba(255,143,171,.3);
+    box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 60px rgba(255,77,121,.12)}
+  .dform .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .dform label{display:grid;gap:6px;font-size:.85rem;color:var(--rose2);letter-spacing:.04em;text-transform:uppercase}
+  .dform input,.dform select,.dform textarea{font:inherit;font-size:1rem;text-transform:none;letter-spacing:0;color:var(--cream);
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,143,171,.25);border-radius:14px;padding:12px 14px;color-scheme:dark;transition:.3s;width:100%}
+  .dform select option{background:#2d1422}
+  .dform input:focus,.dform select:focus,.dform textarea:focus{outline:0;border-color:var(--rose);box-shadow:0 0 0 4px rgba(255,77,121,.2)}
+  .dform button{border:0;cursor:pointer;font:inherit;font-weight:500;font-size:1.05rem;color:#fff;padding:15px;border-radius:999px;
+    background:linear-gradient(135deg,var(--rose),#ff7a9c);box-shadow:0 12px 30px rgba(255,77,121,.45);transition:.3s}
+  .dform button:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(255,77,121,.6)}
+  .dform button:disabled{opacity:.6;cursor:wait}
+  .status{text-align:center;min-height:1.4em;font-size:.95rem}
+  .status.ok{color:#9be7b0}.status.err{color:#ff9aa8}
+  @media(max-width:560px){.dform{padding:26px 20px}.dform .row{grid-template-columns:1fr}}
+
   /* reveal */
   .rv{opacity:0;transform:translateY(40px);transition:opacity 1s,transform 1s}
   .rv.in{opacity:1;transform:none}
@@ -135,8 +178,12 @@
 </head>
 <body>
 <canvas id="hearts"></canvas>
+<nav class="nav" id="nav">
+  <a href="#top" class="logo script">♥ my dva</a>
+  <div><a href="#cas">Spolu</a><a href="#pribeh">Příběh</a><a href="#galerie">Galerie</a><a href="#date" class="cta">Domluvit date</a></div>
+</nav>
 
-<section class="hero">
+<section class="hero" id="top">
   <div>
     <div class="eyebrow script">náš malý svět</div>
     <h1>Jen my <span>dva</span></h1>
@@ -148,21 +195,17 @@
 <section class="counter" id="cas">
   <div class="wrap rv">
     <h2>Jsme spolu už…</h2>
-    <p class="hint">a každý den je lepší než ten předtím</p>
+    <p class="hint">od 5. června – a každý den je lepší než ten předtím</p>
     <div class="boxes" id="boxes">
       <div class="box"><b id="c-d">–</b><small>dní</small></div>
       <div class="box"><b id="c-h">–</b><small>hodin</small></div>
       <div class="box"><b id="c-m">–</b><small>minut</small></div>
       <div class="box"><b id="c-s">–</b><small>sekund</small></div>
     </div>
-    <div class="datepick">
-      <label for="since">Od kdy jste spolu:</label>
-      <input type="date" id="since">
-    </div>
   </div>
 </section>
 
-<section class="story">
+<section class="story" id="pribeh">
   <div class="wrap">
     <div class="title rv">
       <div class="script">kapitoly</div>
@@ -222,7 +265,7 @@
   </div>
 </section>
 
-<section class="gallery">
+<section class="gallery" id="galerie">
   <div class="wrap">
     <div class="title rv">
       <div class="script">momentky</div>
@@ -239,6 +282,39 @@
       <figure><img src="img/1.jpg" alt="" loading="lazy"><figcaption>Nejhezčí šílenec</figcaption></figure>
       <figure><img src="img/9.jpg" alt="" loading="lazy"><figcaption>Pevně u sebe</figcaption></figure>
     </div>
+  </div>
+</section>
+
+<section class="date" id="date">
+  <div class="wrap">
+    <div class="title rv">
+      <div class="script">jedna pozvánka</div>
+      <h2>Domluvit date</h2>
+      <div class="line"></div>
+    </div>
+    <form class="dform rv" id="dateForm">
+      <input type="hidden" name="_subject" value="Nová pozvánka na date ♥">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+      <div class="row">
+        <label>Jméno<input name="jmeno" required placeholder="Jak ti říkat?"></label>
+        <label>Telefon / e-mail<input name="kontakt" required placeholder="Kde tě zastihnu?"></label>
+      </div>
+      <div class="row">
+        <label>Datum<input type="date" name="datum" required></label>
+        <label>Čas<input type="time" name="cas" required value="18:00"></label>
+      </div>
+      <label>Kam půjdeme?
+        <select name="misto">
+          <option>Kavárna ☕</option><option>Kino 🎬</option><option>Procházka 🌳</option>
+          <option>Večeře 🍝</option><option>Nákupy 🛍️</option><option>Překvapení 🎁</option>
+        </select>
+      </label>
+      <label>Vzkaz<textarea name="vzkaz" rows="4" placeholder="Cokoliv, co mi chceš říct…"></textarea></label>
+      <button type="submit">Odeslat pozvánku ♥</button>
+      <p class="status" id="formStatus" role="status"></p>
+    </form>
   </div>
 </section>
 
@@ -289,22 +365,39 @@
   })();
 })();
 
-/* počítadlo */
+/* počítadlo – spolu od 5. 6. */
 (()=>{
-  const inp=document.getElementById('since');
-  let key='loveSince',d='';
-  try{d=localStorage.getItem(key)||''}catch(e){}
-  if(!d){const t=new Date();t.setMonth(t.getMonth()-6);d=t.toISOString().slice(0,10)}
-  inp.value=d;
-  inp.addEventListener('change',()=>{d=inp.value;try{localStorage.setItem(key,d)}catch(e){}tick()});
+  const now=new Date();let y=now.getFullYear();
+  let t=new Date(y,5,5);if(t>now)t=new Date(y-1,5,5);
   const set=(id,v)=>document.getElementById(id).textContent=v;
   function tick(){
-    const t=new Date(d+'T00:00:00'),n=new Date();
-    let s=Math.max(0,Math.floor((n-t)/1000));
+    const s=Math.max(0,Math.floor((new Date()-t)/1000));
     set('c-d',Math.floor(s/86400));set('c-h',Math.floor(s%86400/3600));
     set('c-m',Math.floor(s%3600/60));set('c-s',s%60);
   }
   tick();setInterval(tick,1000);
+})();
+
+/* formulář – Domluvit date */
+(()=>{
+  const f=document.getElementById('dateForm'),st=document.getElementById('formStatus');
+  if(!f)return;
+  const d=f.querySelector('[name=datum]');
+  d.min=new Date().toISOString().slice(0,10);
+  f.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const btn=f.querySelector('button');btn.disabled=true;btn.textContent='Odesílám…';st.className='status';st.textContent='';
+    try{
+      const r=await fetch('https://formsubmit.co/ajax/adamekhanousek1234@gmail.com',{
+        method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify(Object.fromEntries(new FormData(f)))
+      });
+      const j=await r.json();
+      if(!r.ok||j.success==='false')throw new Error();
+      f.reset();st.className='status ok';st.textContent='Odesláno! Ozvu se ti co nejdřív ♥';
+    }catch(err){st.className='status err';st.textContent='Něco se nepovedlo, zkus to prosím znovu.'}
+    btn.disabled=false;btn.textContent='Odeslat pozvánku ♥';
+  });
 })();
 
 /* reveal on scroll */
