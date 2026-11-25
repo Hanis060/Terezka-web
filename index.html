@@ -503,6 +503,7 @@ footer{position:relative;z-index:1;background:var(--wine-2);color:#fbeee8;text-a
       <div class="card"><h4>✨ Co nás čeká</h4><div id="upList"></div></div>
       <div class="card"><h4>📸 Vzpomínky</h4><div id="pastList"></div></div>
     </div>
+    <p class="local-note sync-note">Ukládá se jen v tomhle prohlížeči.</p>
   </div>
 </section>
 
@@ -528,7 +529,7 @@ footer{position:relative;z-index:1;background:var(--wine-2);color:#fbeee8;text-a
         <button class="chip" data-f="done" type="button">Splněno</button>
       </div>
       <ul class="plist" id="planList"></ul>
-      <p class="local-note">Kalendář a plány se ukládají v tomhle prohlížeči.</p>
+      <p class="local-note sync-note">Ukládá se jen v tomhle prohlížeči.</p>
     </div>
   </div>
 </section>
@@ -710,6 +711,13 @@ if(!DB||!Array.isArray(DB.events))DB=JSON.parse(JSON.stringify(SEED));
 DB.gb=DB.gb||[];
 try{const old=JSON.parse(localStorage.getItem('gbSent')||'[]');if(old.length&&!DB.gb.length)DB.gb=old.map((m,i)=>({id:'g'+i,...m}));}catch(e){}
 function save(){try{localStorage.setItem(SKEY,JSON.stringify(DB));return true}catch(e){toast('Prohlížeč nedovolil uložit ☹');return false}}
+/* sdílené ukládání (Firebase) – když není nastavené, ukládá se jen v prohlížeči */
+const FB_CONFIG=null; /*__FIREBASE__*/
+const clean=it=>{const o={};for(const [k,v] of Object.entries(it))if(k!=='id'&&v!==null&&v!==undefined)o[k]=v;return o};
+const Sync={on:false,
+  put(kind,item){save();if(this.on)this.set(this.ref(kind+'/'+item.id),clean(item)).catch(()=>toast('Nepodařilo se uložit online ☹'))},
+  del(kind,id){save();if(this.on)this.remove(this.ref(kind+'/'+id)).catch(()=>toast('Nepodařilo se smazat online ☹'))}};
+function setSyncNote(t){$$('.sync-note').forEach(e=>e.textContent=t)}
 
 /* ===== heslo, intro, hudba ===== */
 (()=>{
@@ -722,6 +730,7 @@ function save(){try{localStorage.setItem(SKEY,JSON.stringify(DB));return true}ca
     const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));
     return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
   }
+  window.sha256=sha;
   const setBtn=on=>mbtn.classList.toggle('on',on);
   window.onYouTubeIframeAPIReady=()=>{
     player=new YT.Player('yt',{height:'1',width:'1',videoId:VIDEO,
@@ -738,7 +747,7 @@ function save(){try{localStorage.setItem(SKEY,JSON.stringify(DB));return true}ca
   }
   form.addEventListener('submit',async e=>{
     e.preventDefault();
-    if(await sha(pw.value.trim())===HASH){want=true;loadMusic();startIntro()}
+    if(await sha(pw.value.trim())===HASH){want=true;loadMusic();window.dispatchEvent(new CustomEvent('pw-ok',{detail:pw.value.trim()}));startIntro()}
     else{err.textContent='Špatné heslo, zkus to znovu ♥';gate.classList.remove('shake');void gate.offsetWidth;gate.classList.add('shake');pw.select()}
   });
   pw.focus();
@@ -798,7 +807,6 @@ function save(){try{localStorage.setItem(SKEY,JSON.stringify(DB));return true}ca
     $('#selTitle').textContent=DL.format(pISO(sel));
     const dl=by[sel]||[];
     $('#dayList').innerHTML=dl.length?dl.map(e=>row(e,false)).join(''):'<p class="empty">Tenhle den je zatím prázdný. Přidej vzpomínku nebo plán ↓</p>';
-    if(!editId)form.date.value=sel;
     const fut=list().filter(e=>e.date>=t).slice(0,6),past=list().filter(e=>e.date<t).reverse();
     $('#upList').innerHTML=fut.length?fut.map(e=>row(e,true)).join(''):'<p class="empty">Zatím nic naplánovaného.</p>';
     $('#pastList').innerHTML=past.length?past.map(e=>row(e,true)).join(''):'<p class="empty">Zatím žádné vzpomínky.</p>';
@@ -815,7 +823,7 @@ function save(){try{localStorage.setItem(SKEY,JSON.stringify(DB));return true}ca
     const act=e.target.closest('button')?.dataset.act;
     if(act==='del'){
       if(!confirm('Smazat „'+item.title+'"?'))return;
-      DB.events=DB.events.filter(x=>x.id!==item.id);save();if(editId===item.id)resetForm();render();toast('Smazáno');
+      DB.events=DB.events.filter(x=>x.id!==item.id);Sync.del('events',item.id);if(editId===item.id)resetForm();render();toast('Smazáno');
     }else if(act==='edit'){
       editId=item.id;form.date.value=item.date;form.icon.value=item.icon||'♥';form.title.value=item.title;form.note.value=item.note||'';
       submit.textContent='Uložit změny';cancel.hidden=false;go(item.date);form.title.focus();
@@ -826,10 +834,12 @@ function save(){try{localStorage.setItem(SKEY,JSON.stringify(DB));return true}ca
     e.preventDefault();
     const v={date:form.date.value,icon:form.icon.value,title:form.title.value.trim(),note:form.note.value.trim()};
     if(!v.date||!v.title)return;
-    if(editId){Object.assign(DB.events.find(x=>x.id===editId)||{},v)}else DB.events.push({id:uid('e'),...v});
-    const was=!!editId;save();resetForm();go(v.date);toast(was?'Uloženo ✎':'Přidáno do kalendáře ♥');
+    let it=editId&&DB.events.find(x=>x.id===editId);
+    if(it)Object.assign(it,v);else{it={id:uid('e'),...v};DB.events.push(it)}
+    const was=!!editId;Sync.put('events',it);sel=v.date;resetForm();go(v.date);toast(was?'Uloženo ✎':'Přidáno do kalendáře ♥');
   });
-  render();
+  window.renderCal=render;
+  render();form.date.value=sel;
   setInterval(()=>{if(todayISO()!==render._t){render._t=todayISO();render()}},60000);
 })();
 
@@ -850,19 +860,20 @@ function save(){try{localStorage.setItem(SKEY,JSON.stringify(DB));return true}ca
   }
   $('#planForm').addEventListener('submit',e=>{
     e.preventDefault();const f=e.target,text=f.text.value.trim();if(!text)return;
-    DB.plans.push({id:uid('p'),icon:f.icon.value,text,done:false});save();f.text.value='';if(filter==='done'){filter='all';setChip()}render();toast('Plán přidán ✨');
+    const it={id:uid('p'),icon:f.icon.value,text,done:false};DB.plans.push(it);Sync.put('plans',it);f.text.value='';if(filter==='done'){filter='all';setChip()}render();toast('Plán přidán ✨');
   });
   $('#planList').addEventListener('click',e=>{
     const li=e.target.closest('.plan');if(!li)return;const p=DB.plans.find(x=>x.id===li.dataset.id);if(!p)return;
-    if(e.target.closest('.pdel')){if(!confirm('Smazat plán „'+p.text+'"?'))return;DB.plans=DB.plans.filter(x=>x!==p);save();render();return}
+    if(e.target.closest('.pdel')){if(!confirm('Smazat plán „'+p.text+'"?'))return;DB.plans=DB.plans.filter(x=>x!==p);Sync.del('plans',p.id);render();return}
     if(e.target.closest('.chk')||e.target.closest('.pb')){
-      p.done=!p.done;p.doneAt=p.done?Date.now():null;save();
+      p.done=!p.done;p.doneAt=p.done?Date.now():null;Sync.put('plans',p);
       if(p.done){const r=li.querySelector('.chk').getBoundingClientRect();window.burst&&window.burst(r.left+r.width/2,r.top+r.height/2,60);toast('Splněno! ♥')}
       render();
     }
   });
   function setChip(){$$('#planChips .chip').forEach(c=>c.classList.toggle('on',c.dataset.f===filter))}
   $('#planChips').addEventListener('click',e=>{const c=e.target.closest('.chip');if(!c)return;filter=c.dataset.f;setChip();render()});
+  window.renderPlans=render;
   render();
 })();
 
@@ -870,15 +881,18 @@ function save(){try{localStorage.setItem(SKEY,JSON.stringify(DB));return true}ca
 (()=>{
   const f=$('#gbForm'),st=$('#gbStatus'),list=$('#gbList');
   function draw(){
+    DB.gb.sort((a,b)=>(b.t||0)-(a.t||0));
     list.innerHTML=DB.gb.length?DB.gb.map(m=>'<div class="note"><p>'+esc(m.vzkaz)+'</p><small>'+esc(m.nalada)+' · '+esc(m.jmeno)+' · '+esc(m.datum)+'</small></div>').join('')
       :'<div class="note"><p>Tady se objeví tvoje vzkazy ♥</p><small>zatím prázdno</small></div>';
   }
+  window.renderGb=draw;
   draw();
   f.addEventListener('submit',async e=>{
     e.preventDefault();
     const btn=f.querySelector('button');btn.disabled=true;btn.textContent='Zapisuju…';st.className='status';st.textContent='';
     const d=Object.fromEntries(new FormData(f));
-    DB.gb.unshift({id:uid('g'),jmeno:d.jmeno,nalada:d.nalada,vzkaz:d.vzkaz,datum:new Date().toLocaleDateString('cs-CZ')});save();draw();
+    const it={id:uid('g'),jmeno:d.jmeno,nalada:d.nalada,vzkaz:d.vzkaz,datum:new Date().toLocaleDateString('cs-CZ'),t:Date.now()};
+    DB.gb.unshift(it);Sync.put('gb',it);draw();
     try{
       const r=await fetch('https://formsubmit.co/ajax/3c969fd54016dfe3f37e240bab0e0558',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(d)});
       const j=await r.json();if(!r.ok||j.success==='false')throw 0;
@@ -903,6 +917,36 @@ function save(){try{localStorage.setItem(SKEY,JSON.stringify(DB));return true}ca
     btn.disabled=false;btn.textContent='Odeslat pozvánku ♥';
   });
 })();
+
+/* ===== napojení na Firebase (sdílené pro oba) ===== */
+window.addEventListener('pw-ok',async e=>{
+  if(!FB_CONFIG){setSyncNote('Ukládá se jen v tomhle prohlížeči.');return}
+  setSyncNote('Připojuju se…');
+  try{
+    const V='10.12.2';
+    const [{initializeApp},{getDatabase,ref,onValue,set,remove,update}]=await Promise.all([
+      import('https://www.gstatic.com/firebasejs/'+V+'/firebase-app.js'),
+      import('https://www.gstatic.com/firebasejs/'+V+'/firebase-database.js')]);
+    const space=await window.sha256('jmd-space:'+e.detail);
+    const db=getDatabase(initializeApp(FB_CONFIG)),base='spaces/'+space,FLAG='jmd-synced-'+space.slice(0,8);
+    Object.assign(Sync,{ref:p=>ref(db,base+'/'+p),set,remove});
+    let first=true;
+    onValue(ref(db,base),snap=>{
+      const v=snap.val()||{};
+      let synced=false;try{synced=localStorage.getItem(FLAG)==='1'}catch(_){}
+      if(first&&!synced){
+        first=false;
+        const up={};['events','plans','gb'].forEach(k=>DB[k].forEach(it=>{if(!(v[k]&&v[k][it.id]))up[k+'/'+it.id]=clean(it)}));
+        if(Object.keys(up).length){update(ref(db,base),up).then(()=>{try{localStorage.setItem(FLAG,'1')}catch(_){}});return}
+      }
+      first=false;try{localStorage.setItem(FLAG,'1')}catch(_){}
+      const arr=k=>Object.entries(v[k]||{}).map(([id,o])=>({...o,id}));
+      DB.events=arr('events');DB.plans=arr('plans');DB.gb=arr('gb');save();
+      Sync.on=true;setSyncNote('☁︎ Synchronizováno – vidíte to oba ♥');
+      window.renderCal&&renderCal();window.renderPlans&&renderPlans();window.renderGb&&renderGb();
+    },err=>{console.warn(err);Sync.on=false;setSyncNote('Nepodařilo se připojit – ukládá se jen tady.')});
+  }catch(err){console.warn(err);setSyncNote('Nepodařilo se připojit – ukládá se jen tady.')}
+});
 
 /* ===== plovoucí srdíčka ===== */
 (()=>{
