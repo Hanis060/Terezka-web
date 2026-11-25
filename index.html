@@ -712,7 +712,15 @@ DB.gb=DB.gb||[];
 try{const old=JSON.parse(localStorage.getItem('gbSent')||'[]');if(old.length&&!DB.gb.length)DB.gb=old.map((m,i)=>({id:'g'+i,...m}));}catch(e){}
 function save(){try{localStorage.setItem(SKEY,JSON.stringify(DB));return true}catch(e){toast('Prohlížeč nedovolil uložit ☹');return false}}
 /* sdílené ukládání (Firebase) – když není nastavené, ukládá se jen v prohlížeči */
-const FB_CONFIG=null; /*__FIREBASE__*/
+const FB_CONFIG={
+  apiKey:"AIzaSyCIn_yf8Tp0Tt8rGGQ6t_kBVbnplMKsrfE",
+  authDomain:"terezka-web-9f141.firebaseapp.com",
+  databaseURL:"https://terezka-web-9f141-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"terezka-web-9f141",
+  storageBucket:"terezka-web-9f141.firebasestorage.app",
+  messagingSenderId:"675162289580",
+  appId:"1:675162289580:web:091331a9600b3db10a7609"
+};
 const clean=it=>{const o={};for(const [k,v] of Object.entries(it))if(k!=='id'&&v!==null&&v!==undefined)o[k]=v;return o};
 const Sync={on:false,
   put(kind,item){save();if(this.on)this.set(this.ref(kind+'/'+item.id),clean(item)).catch(()=>toast('Nepodařilo se uložit online ☹'))},
