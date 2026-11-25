@@ -142,7 +142,10 @@ body.locked .nav,body.locked .music{display:none}
 .tl-item::after{content:"";position:absolute;top:30px;right:-10px;width:20px;height:20px;border-radius:50%;background:var(--paper);border:3px solid var(--wine);box-shadow:0 0 0 7px rgba(125,22,49,.09)}
 .tl-item:nth-child(even)::after{right:auto;left:-10px}
 .tl-card{background:var(--card);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line)}
-.tl-card img{width:100%;aspect-ratio:16/10;object-fit:cover;cursor:zoom-in}
+.tl-card .ph{position:relative;aspect-ratio:1/1;overflow:hidden;background:var(--wine-2);isolation:isolate}
+.tl-card .ph::before{content:"";position:absolute;inset:-30px;z-index:-1;background:var(--img) center/cover;filter:blur(22px) saturate(1.2) brightness(.75);transform:scale(1.1)}
+.tl-card .ph img{width:100%;height:100%;object-fit:contain;cursor:zoom-in;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.tl-card:hover .ph img{transform:scale(1.03)}
 .tl-card .b{padding:20px 24px 24px}
 .tl-card time{font-family:var(--hand);font-size:1.6rem;color:var(--rose);line-height:1}
 .tl-card h3{font-size:1.55rem;margin:6px 0 8px}
@@ -451,13 +454,13 @@ footer{position:relative;z-index:1;background:var(--wine-2);color:#fbeee8;text-a
       <h2>Naše <em>časová osa</em></h2>
     </header>
     <div class="tl">
-      <div class="tl-item rv"><div class="tl-card"><img src="img/18.jpg" alt="" loading="lazy"><div class="b"><time>11. dubna</time><h3>První přespávačka</h3><p>Byli jsme v Café baru a tvoji rodiče nebyli doma, tak jsem u tebe přespal. Dával jsem ti masáž a bylo nám spolu moc dobře. Domů se mi vůbec nechtělo.</p></div></div></div>
-      <div class="tl-item rv"><div class="tl-card"><img src="img/32.jpg" alt="" loading="lazy"><div class="b"><time>30. dubna</time><h3>Majáles v Praze</h3><p>Náš výlet do Prahy na Majáles a procházky po Praze. Hudba, dobré počasí a společně strávený čas, na který nikdy nezapomeneme.</p></div></div></div>
-      <div class="tl-item rv"><div class="tl-card"><img src="img/24.jpg" alt="" loading="lazy"><div class="b"><time>29. května</time><h3>Za tebou na Lemberk</h3><p>Když jsi měla praxi, jezdil jsem za tebou na Lemberk. I když to bylo jen na chvilku a cesta byla dlouhá, vyplatilo se to, protože vzpomínky na trojmezí, kino a přespávačku jen tak nezapomeneme.</p></div></div></div>
-      <div class="tl-item rv"><div class="tl-card"><img src="img/25.jpg" alt="" loading="lazy"><div class="b"><time>5. června</time><h3>Chodíš se mnou?</h3><p>Než jsem odletěl na Maltu, zeptal jsem se tě, jestli se mnou budeš chodit. Na štěstí jsi řekla ano a od té doby žijeme náš krásný příběh.</p></div></div></div>
-      <div class="tl-item rv"><div class="tl-card"><img src="img/20.jpg" alt="" loading="lazy"><div class="b"><time>6 týdnů na Maltě</time><h3>Nejtěžší období</h3><p>Šest týdnů daleko od sebe. Volali jsme si skoro každý den a právě tehdy jsem poznal, jak moc mi chybíš.</p></div></div></div>
-      <div class="tl-item rv"><div class="tl-card"><img src="img/15.jpg" alt="" loading="lazy"><div class="b"><time>19. července</time><h3>Východ slunce na Sněžce</h3><p>Jeli jsme spolu do Janských Lázní a vyšlapali jsme si východ slunce na Sněžku. Nejhezčí ráno.</p></div></div></div>
-      <div class="tl-item rv"><div class="tl-card"><img src="img/23.jpg" alt="" loading="lazy"><div class="b"><time>Od té doby až do stáří</time><h3>Miluju tě nejvíc na světě</h3><p>Chci s tebou strávit zbytek života a plnit si hlavu vzpomínkami na nás dva, protože mě děláš nejšťastnějším klukem na světě ♥</p></div></div></div>
+      <div class="tl-item rv"><div class="tl-card"><div class="ph" style="--img:url(img/18.jpg)"><img src="img/18.jpg" alt="" loading="lazy"></div><div class="b"><time>11. dubna</time><h3>První přespávačka</h3><p>Byli jsme v Café baru a tvoji rodiče nebyli doma, tak jsem u tebe přespal. Dával jsem ti masáž a bylo nám spolu moc dobře. Domů se mi vůbec nechtělo.</p></div></div></div>
+      <div class="tl-item rv"><div class="tl-card"><div class="ph" style="--img:url(img/32.jpg)"><img src="img/32.jpg" alt="" loading="lazy"></div><div class="b"><time>30. dubna</time><h3>Majáles v Praze</h3><p>Náš výlet do Prahy na Majáles a procházky po Praze. Hudba, dobré počasí a společně strávený čas, na který nikdy nezapomeneme.</p></div></div></div>
+      <div class="tl-item rv"><div class="tl-card"><div class="ph" style="--img:url(img/24.jpg)"><img src="img/24.jpg" alt="" loading="lazy"></div><div class="b"><time>29. května</time><h3>Za tebou na Lemberk</h3><p>Když jsi měla praxi, jezdil jsem za tebou na Lemberk. I když to bylo jen na chvilku a cesta byla dlouhá, vyplatilo se to, protože vzpomínky na trojmezí, kino a přespávačku jen tak nezapomeneme.</p></div></div></div>
+      <div class="tl-item rv"><div class="tl-card"><div class="ph" style="--img:url(img/25.jpg)"><img src="img/25.jpg" alt="" loading="lazy"></div><div class="b"><time>5. června</time><h3>Chodíš se mnou?</h3><p>Než jsem odletěl na Maltu, zeptal jsem se tě, jestli se mnou budeš chodit. Na štěstí jsi řekla ano a od té doby žijeme náš krásný příběh.</p></div></div></div>
+      <div class="tl-item rv"><div class="tl-card"><div class="ph" style="--img:url(img/20.jpg)"><img src="img/20.jpg" alt="" loading="lazy"></div><div class="b"><time>6 týdnů na Maltě</time><h3>Nejtěžší období</h3><p>Šest týdnů daleko od sebe. Volali jsme si skoro každý den a právě tehdy jsem poznal, jak moc mi chybíš.</p></div></div></div>
+      <div class="tl-item rv"><div class="tl-card"><div class="ph" style="--img:url(img/15.jpg)"><img src="img/15.jpg" alt="" loading="lazy"></div><div class="b"><time>19. července</time><h3>Východ slunce na Sněžce</h3><p>Jeli jsme spolu do Janských Lázní a vyšlapali jsme si východ slunce na Sněžku. Nejhezčí ráno.</p></div></div></div>
+      <div class="tl-item rv"><div class="tl-card"><div class="ph" style="--img:url(img/23.jpg)"><img src="img/23.jpg" alt="" loading="lazy"></div><div class="b"><time>Od té doby až do stáří</time><h3>Miluju tě nejvíc na světě</h3><p>Chci s tebou strávit zbytek života a plnit si hlavu vzpomínkami na nás dva, protože mě děláš nejšťastnějším klukem na světě ♥</p></div></div></div>
     </div>
   </div>
 </section>
@@ -549,7 +552,6 @@ footer{position:relative;z-index:1;background:var(--wine-2);color:#fbeee8;text-a
       <figure class="pol rv"><img src="img/7.jpg" alt="" loading="lazy"><figcaption>To je jasné, že se tam musíme vyfotit</figcaption></figure>
       <figure class="pol rv"><img src="img/13.jpg" alt="" loading="lazy"><figcaption>To jen ten gauč a lazy days</figcaption></figure>
       <figure class="pol rv"><img src="img/10.jpg" alt="" loading="lazy"><figcaption>Rozmazaní, ale šťastní</figcaption></figure>
-      <figure class="pol rv"><img src="img/1.jpg" alt="" loading="lazy"><figcaption>No jo, to bylo vysloveně bahno</figcaption></figure>
       <figure class="pol rv"><img src="img/9.jpg" alt="" loading="lazy"><figcaption>Ten foťáček má něco do sebe</figcaption></figure>
       <figure class="pol rv"><img src="img/17.jpg" alt="" loading="lazy"><figcaption>Pusinkaaaaaaa</figcaption></figure>
       <figure class="pol rv"><img src="img/19.jpg" alt="" loading="lazy"><figcaption>Crazy duo</figcaption></figure>
