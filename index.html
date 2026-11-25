@@ -3,481 +3,640 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#7d1631">
 <title>Jen my dva</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Caveat:wght@500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Caveat:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#1a0b12; --bg2:#240f1a; --card:#2d1422;
-    --rose:#ff4d79; --rose2:#ff8fab; --cream:#fff1ec; --muted:#d9b8c3;
-    --gold:#f3c98b;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    background:var(--bg); color:var(--cream);
-    font-family:'Inter',system-ui,sans-serif; font-weight:300; line-height:1.7;
-    overflow-x:hidden;
-  }
-  h1,h2,h3{font-family:'Playfair Display',serif; font-weight:500}
-  .script{font-family:'Caveat',cursive; font-weight:500}
-  canvas#hearts{position:fixed;inset:0;pointer-events:none;z-index:1}
-  section{position:relative;z-index:2}
-  .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+:root{
+  --paper:#f6efe6; --paper-2:#ede2d2; --card:#fffaf3; --ink:#2b1b20; --ink-2:#5b474c; --muted:#8a777b;
+  --wine:#7d1631; --wine-2:#4e0c1e; --rose:#d4506c; --blush:#f3d4d4; --gold:#b98a4a; --line:rgba(43,27,32,.12);
+  --shadow:0 1px 2px rgba(60,20,30,.06),0 24px 48px -22px rgba(60,20,30,.38);
+  --serif:'Fraunces',Georgia,serif; --hand:'Caveat',cursive; --sans:'Inter',system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;overflow-x:hidden}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:5;opacity:.07;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit;cursor:pointer}
+h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:-.015em;line-height:1.1}
+em{font-style:italic}
+.hand{font-family:var(--hand)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+section{position:relative;z-index:1}
+.sec{padding:clamp(72px,11vw,140px) 0}
+canvas#hearts{position:fixed;inset:0;pointer-events:none;z-index:0}
 
-  /* HERO */
-  .hero{
-    min-height:100svh; display:grid; place-items:center; text-align:center;
-    background:
-      linear-gradient(180deg,rgba(26,11,18,.35) 0%,rgba(26,11,18,.65) 60%,var(--bg) 100%),
-      url(img/12.jpg) center 30%/cover;
-    padding:40px 20px;
-  }
-  .hero .eyebrow{font-size:clamp(1.4rem,4vw,2rem);color:var(--rose2);margin-bottom:6px}
-  .hero h1{font-size:clamp(3rem,11vw,7.5rem);line-height:1;font-style:italic;text-shadow:0 6px 40px rgba(255,77,121,.45)}
-  .hero h1 span{color:var(--rose)}
-  .hero p.sub{max-width:520px;margin:22px auto 0;color:var(--cream);opacity:.9;font-size:1.05rem}
-  .scroll{display:inline-block;margin-top:44px;color:var(--cream);text-decoration:none;opacity:.8;animation:bob 2s infinite}
-  @keyframes bob{50%{transform:translateY(8px)}}
-  .heartbeat{display:inline-block;color:var(--rose);animation:beat 1.4s infinite}
-  @keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.25)}30%{transform:scale(1)}45%{transform:scale(1.18)}}
+/* section header */
+.sh{text-align:center;margin-bottom:clamp(40px,6vw,68px)}
+.sh .no{display:inline-flex;align-items:center;gap:14px;font-family:var(--serif);font-style:italic;color:var(--wine);letter-spacing:.12em;font-size:.95rem}
+.sh .no::before,.sh .no::after{content:"";width:38px;height:1px;background:currentColor;opacity:.45}
+.sh h2{font-size:clamp(2.4rem,6.5vw,4.2rem);margin:12px 0 6px}
+.sh h2 em{color:var(--wine)}
+.sh .kick{font-family:var(--hand);font-size:1.65rem;color:var(--rose);line-height:1.2}
+.sh p{color:var(--ink-2);max-width:560px;margin:10px auto 0}
 
-  /* COUNTER */
-  .counter{padding:80px 0 40px;text-align:center}
-  .counter h2{font-size:clamp(1.8rem,5vw,2.8rem);margin-bottom:8px}
-  .counter .hint{color:var(--muted);font-size:.95rem;margin-bottom:28px}
-  .boxes{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-  .box{
-    min-width:92px;padding:18px 14px;border-radius:20px;
-    background:linear-gradient(160deg,var(--card),#1f0e17);
-    border:1px solid rgba(255,143,171,.25); box-shadow:0 10px 40px rgba(0,0,0,.35);
-  }
-  .box b{display:block;font-family:'Playfair Display',serif;font-size:2.4rem;color:var(--rose2);font-weight:700;line-height:1.1}
-  .box small{color:var(--muted);text-transform:uppercase;letter-spacing:.14em;font-size:.68rem}
-  .datepick{margin-top:22px}
-  .datepick input{
-    background:var(--card);color:var(--cream);border:1px solid rgba(255,143,171,.35);
-    border-radius:999px;padding:9px 18px;font:inherit;color-scheme:dark;
-  }
-  .datepick label{margin-right:8px;color:var(--muted);font-size:.9rem}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:13px 26px;font-weight:500;
+  background:var(--wine);color:#fff7f2;box-shadow:0 10px 24px -10px rgba(125,22,49,.7);transition:transform .25s,box-shadow .25s,background .25s;text-decoration:none}
+.btn:hover{transform:translateY(-2px);background:#911b3a}
+.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.btn.ghost{background:transparent;color:var(--wine);box-shadow:inset 0 0 0 1.5px var(--wine)}
+.btn.ghost:hover{background:rgba(125,22,49,.06)}
+.btn.light{background:#fff7f2;color:var(--wine)}
 
-  /* STORY */
-  .story{padding:70px 0}
-  .title{text-align:center;margin-bottom:56px}
-  .title .script{color:var(--rose2);font-size:1.7rem}
-  .title h2{font-size:clamp(2rem,6vw,3.4rem)}
-  .title .line{width:90px;height:2px;margin:16px auto 0;background:linear-gradient(90deg,transparent,var(--rose),transparent)}
-  .chapter{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-bottom:90px}
-  .chapter:nth-child(even) .pic{order:2}
-  .pic{position:relative}
-  .pic img{width:100%;display:block;border-radius:22px;box-shadow:0 24px 60px rgba(0,0,0,.55);cursor:zoom-in;transition:transform .5s}
-  .pic img:hover{transform:scale(1.02) rotate(-.6deg)}
-  .pic::after{content:"";position:absolute;inset:14px -14px -14px 14px;border:1px solid rgba(255,77,121,.5);border-radius:22px;z-index:-1}
-  .chapter:nth-child(even) .pic::after{inset:14px 14px -14px -14px}
-  .chapter .txt .no{font-family:'Playfair Display',serif;font-style:italic;color:var(--rose);font-size:1.2rem}
-  .chapter .txt h3{font-size:clamp(1.7rem,4vw,2.4rem);margin:4px 0 12px}
-  .chapter .txt p{color:var(--muted);font-size:1.05rem}
-  .chapter .txt .script{display:block;margin-top:14px;color:var(--gold);font-size:1.5rem}
+/* ===== GATE ===== */
+body.locked{overflow:hidden}
+.gate,.intro{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:24px;transition:opacity 1.1s,visibility 1.1s}
+.gate.hide,.intro.hide{opacity:0;visibility:hidden;pointer-events:none}
+.gate{background:#2a0b15 url(img/15.jpg) center/cover}
+.gate::before{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(78,12,30,.82),rgba(30,8,14,.9));backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.gate-card{position:relative;width:100%;max-width:430px;text-align:center;color:#fbeee8;padding:46px 30px 36px;border-radius:30px;
+  background:rgba(255,250,243,.07);border:1px solid rgba(255,255,255,.16);box-shadow:0 40px 80px -30px rgba(0,0,0,.6)}
+.gate-card .lock{width:64px;height:64px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);animation:beat 1.8s infinite}
+.gate-card .lock svg{width:28px;height:28px;fill:#ffc9d3}
+.gate-card h2{font-size:clamp(2rem,7vw,2.5rem);font-style:italic;font-weight:300}
+.gate-card p{opacity:.8;margin:10px auto 26px;max-width:320px;font-size:.98rem}
+.gate form{display:grid;gap:12px}
+.gate input{font:inherit;font-size:1.15rem;text-align:center;letter-spacing:.35em;color:#fff;width:100%;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:14px 18px}
+.gate input::placeholder{color:rgba(255,255,255,.4)}
+.gate input:focus{outline:0;border-color:#ffc9d3;box-shadow:0 0 0 4px rgba(255,201,211,.18)}
+.gate .err{color:#ffb3c1;min-height:1.5em;margin-top:12px;font-size:.92rem}
+.gate.shake .gate-card{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+.intro{background:radial-gradient(circle at 50% 45%,#4e0c1e,#16060b 70%);z-index:999;color:#fbeee8;text-align:center}
+.intro .bigheart{font-size:clamp(4.5rem,20vw,8rem);color:#e2607b;animation:beat 1.1s infinite;filter:drop-shadow(0 0 40px rgba(226,96,123,.7));line-height:1}
+.intro .lines{min-height:7em;margin-top:18px;max-width:640px}
+.intro .lines p{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(1.3rem,4.5vw,2rem);opacity:0;transform:translateY(14px);transition:1.1s}
+.intro .lines p.on{opacity:1;transform:none}
+.intro .lines p.big{font-family:var(--hand);font-style:normal;font-size:clamp(1.9rem,6.5vw,3rem);color:#ffc9d3;margin-top:8px;line-height:1.15}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.18)}30%{transform:scale(1)}45%{transform:scale(1.12)}}
 
-  /* GALLERY */
-  .gallery{padding:70px 0;background:linear-gradient(180deg,var(--bg),var(--bg2) 50%,var(--bg))}
-  .masonry{columns:3 260px;column-gap:16px}
-  .masonry figure{break-inside:avoid;margin-bottom:16px;position:relative;overflow:hidden;border-radius:16px;cursor:zoom-in}
-  .masonry img{width:100%;display:block;transition:transform .6s,filter .6s}
-  .masonry figure:hover img{transform:scale(1.07);filter:saturate(1.2)}
-  .masonry figcaption{
-    position:absolute;left:0;right:0;bottom:0;padding:30px 14px 12px;
-    background:linear-gradient(transparent,rgba(26,11,18,.9));
-    font-family:'Caveat',cursive;font-size:1.4rem;opacity:0;transform:translateY(10px);transition:.4s;
-  }
-  .masonry figure:hover figcaption{opacity:1;transform:none}
+/* ===== NAV ===== */
+.nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:2px;padding:6px;max-width:calc(100vw - 24px);
+  border-radius:999px;background:rgba(255,250,243,.78);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);
+  border:1px solid var(--line);box-shadow:0 12px 30px -16px rgba(60,20,30,.35);overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+body.locked .nav,body.locked .music{display:none}
+.nav a{white-space:nowrap;color:var(--ink-2);text-decoration:none;font-size:.84rem;font-weight:500;padding:8px 13px;border-radius:999px;transition:.25s}
+.nav a:hover{color:var(--wine);background:rgba(125,22,49,.06)}
+.nav a.act{color:var(--wine);background:rgba(125,22,49,.09)}
+.nav a.logo{font-family:var(--hand);font-size:1.35rem;color:var(--wine);padding:2px 12px 2px 10px;font-weight:700}
+.nav a.cta{background:var(--wine);color:#fff7f2}
+.nav a.cta:hover{background:#911b3a}
 
-  /* LETTER */
-  .letter{padding:90px 0 110px}
-  .paper{
-    max-width:720px;margin:0 auto;padding:54px 46px;text-align:center;
-    background:linear-gradient(160deg,#fff1ec,#ffdde3);color:#4a1a2a;border-radius:6px;
-    box-shadow:0 30px 80px rgba(0,0,0,.6);position:relative;
-    transform:rotate(-.8deg);
-  }
-  .paper h2{font-size:2.2rem;color:#b3123f;margin-bottom:18px;font-style:italic}
-  .paper p{font-size:1.1rem;margin-bottom:14px;color:#5b2335}
-  .paper .sign{font-family:'Caveat',cursive;font-size:2rem;color:#b3123f;margin-top:20px}
-  .paper::before,.paper::after{content:"♥";position:absolute;color:var(--rose);font-size:1.8rem}
-  .paper::before{top:-14px;left:-10px;transform:rotate(-20deg)}
-  .paper::after{bottom:-16px;right:-8px;transform:rotate(15deg)}
+/* ===== HERO ===== */
+.hero{min-height:100svh;display:flex;align-items:flex-end;color:#fff;overflow:hidden;isolation:isolate}
+.hero .bg{position:absolute;inset:0;z-index:-2;background:url(img/15.jpg) 30% 42%/cover;transform:scale(1.1);animation:kb 26s ease-out forwards}
+@keyframes kb{to{transform:scale(1)}}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(180deg,rgba(25,8,14,.35) 0%,rgba(25,8,14,.15) 35%,rgba(60,12,26,.7) 78%,var(--paper) 100%)}
+.hero .in{width:100%;max-width:1120px;margin:0 auto;padding:0 20px clamp(90px,16vh,170px)}
+.hero .eyebrow{font-family:var(--hand);font-size:clamp(1.5rem,4vw,2.1rem);color:#ffd5dc;text-shadow:0 2px 20px rgba(0,0,0,.4)}
+.hero h1{font-weight:300;font-size:clamp(3.8rem,14vw,10.5rem);line-height:.88;letter-spacing:-.035em;margin:6px 0 22px;text-shadow:0 8px 50px rgba(0,0,0,.35)}
+.hero h1 em{color:#ffc9d3;font-weight:300}
+.hero .sub{max-width:470px;font-size:1.1rem;opacity:.94;text-shadow:0 2px 16px rgba(0,0,0,.4)}
+.hero .row{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:30px}
+.stamp{font-family:var(--serif);font-style:italic;letter-spacing:.18em;font-size:.9rem;padding:10px 18px;border:1px solid rgba(255,255,255,.45);border-radius:999px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);background:rgba(255,255,255,.08)}
 
-  footer{padding:40px 20px 60px;text-align:center;color:var(--muted);font-size:.9rem;position:relative;z-index:2}
+/* ===== COUNTER ===== */
+.count-card{max-width:900px;margin:0 auto;background:var(--card);border-radius:32px;box-shadow:var(--shadow);border:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(4,1fr);overflow:hidden}
+.count-card div{padding:34px 10px 28px;text-align:center;border-right:1px solid var(--line)}
+.count-card div:last-child{border-right:0}
+.count-card b{display:block;font-family:var(--serif);font-weight:300;font-size:clamp(2.6rem,7vw,4.6rem);line-height:1;color:var(--wine);font-variant-numeric:tabular-nums}
+.count-card small{display:block;margin-top:10px;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.anniv{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.pill{padding:11px 20px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--ink-2);font-size:.95rem}
+.pill b{font-family:var(--serif);font-weight:500;color:var(--wine);font-size:1.08rem}
 
-  /* LIGHTBOX */
-  .lb{position:fixed;inset:0;background:rgba(10,3,7,.92);z-index:100;display:none;place-items:center;padding:20px}
-  .lb.open{display:grid}
-  .lb img{max-width:min(95vw,1200px);max-height:88vh;border-radius:14px;box-shadow:0 20px 80px rgba(255,77,121,.25)}
-  .lb button{position:absolute;background:none;border:0;color:var(--cream);font-size:2.4rem;cursor:pointer;padding:12px;opacity:.8}
-  .lb button:hover{opacity:1;color:var(--rose2)}
-  .lb .x{top:10px;right:16px}.lb .p{left:10px;top:50%}.lb .n{right:10px;top:50%}
+/* ===== POLAROID ===== */
+.pol{background:#fff;padding:12px 12px 6px;box-shadow:var(--shadow);transform:rotate(var(--r,-2deg));transition:transform .5s cubic-bezier(.2,.8,.2,1);position:relative}
+.pol:hover{transform:rotate(0) scale(1.015)}
+.pol::before{content:"";position:absolute;top:-13px;left:50%;width:96px;height:26px;transform:translateX(-50%) rotate(-3deg);
+  background:rgba(243,212,212,.75);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.pol img{width:100%;aspect-ratio:4/5;object-fit:cover;cursor:zoom-in;filter:saturate(1.05) contrast(1.02)}
+.pol figcaption{font-family:var(--hand);font-size:1.5rem;text-align:center;padding:8px 6px 6px;color:var(--ink);line-height:1.2}
 
+/* ===== STORY ===== */
+.chapter{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,7vw,90px);align-items:center;margin-bottom:clamp(70px,10vw,120px)}
+.chapter:last-child{margin-bottom:0}
+.chapter .pol{max-width:420px;width:100%;margin:0 auto}
+.chapter:nth-child(even) .pol{order:2;--r:2.2deg}
+.chapter .txt .cn{font-family:var(--serif);font-style:italic;color:var(--wine);font-size:1.05rem;display:flex;align-items:center;gap:12px}
+.chapter .txt .cn::after{content:"";height:1px;width:60px;background:currentColor;opacity:.4}
+.chapter h3{font-size:clamp(2rem,4.5vw,3rem);margin:12px 0 16px}
+.chapter p{color:var(--ink-2);font-size:1.07rem;max-width:480px}
 
-  /* NAV */
-  .nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;
-    padding:12px 22px;backdrop-filter:blur(14px);background:rgba(26,11,18,.55);border-bottom:1px solid rgba(255,143,171,.15)}
-  .nav .logo{font-size:1.6rem;color:var(--rose2);text-decoration:none}
-  .nav div{display:flex;gap:6px;align-items:center}
-  .nav a{color:var(--cream);text-decoration:none;font-size:.9rem;padding:6px 12px;border-radius:999px;transition:.3s}
-  .nav a:hover{color:var(--rose2)}
-  .nav a.cta{background:linear-gradient(135deg,var(--rose),#ff7a9c);color:#fff;font-weight:500;box-shadow:0 6px 20px rgba(255,77,121,.4)}
-  .nav a.cta:hover{color:#fff;transform:translateY(-1px)}
-  @media(max-width:620px){.nav div a:not(.cta){display:none}}
-  section[id]{scroll-margin-top:60px}
+/* ===== TIMELINE ===== */
+.tl{position:relative;max-width:980px;margin:0 auto}
+.tl::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);background:linear-gradient(var(--wine),rgba(125,22,49,.06))}
+.tl-item{position:relative;width:50%;padding:0 46px 54px 0}
+.tl-item:nth-child(even){margin-left:50%;padding:0 0 54px 46px}
+.tl-item::after{content:"";position:absolute;top:30px;right:-10px;width:20px;height:20px;border-radius:50%;background:var(--paper);border:3px solid var(--wine);box-shadow:0 0 0 7px rgba(125,22,49,.09)}
+.tl-item:nth-child(even)::after{right:auto;left:-10px}
+.tl-card{background:var(--card);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line)}
+.tl-card img{width:100%;aspect-ratio:16/10;object-fit:cover;cursor:zoom-in}
+.tl-card .b{padding:20px 24px 24px}
+.tl-card time{font-family:var(--hand);font-size:1.6rem;color:var(--rose);line-height:1}
+.tl-card h3{font-size:1.55rem;margin:6px 0 8px}
+.tl-card p{color:var(--ink-2);font-size:.98rem}
 
-  /* extra polish */
-  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-    background:radial-gradient(circle at 15% 20%,rgba(255,77,121,.14),transparent 45%),
-               radial-gradient(circle at 85% 70%,rgba(243,201,139,.09),transparent 45%)}
-  .hero h1{background:linear-gradient(120deg,#fff 30%,var(--rose2) 70%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 6px 30px rgba(255,77,121,.5))}
-  .hero h1 span{-webkit-text-fill-color:var(--rose)}
-  .scroll{border:1px solid rgba(255,255,255,.35);padding:10px 26px;border-radius:999px;backdrop-filter:blur(6px);background:rgba(255,255,255,.08)}
-  .title h2{background:linear-gradient(120deg,var(--cream),var(--rose2));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .title .line{height:3px;border-radius:3px}
-  .box{backdrop-filter:blur(8px);transition:transform .4s}.box:hover{transform:translateY(-6px)}
+/* ===== CARDS / FORMS ===== */
+.card{background:var(--card);border-radius:28px;box-shadow:var(--shadow);border:1px solid var(--line);padding:clamp(20px,3.5vw,32px)}
+.f{display:grid;gap:14px}
+.f .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.f label{display:grid;gap:6px;font-size:.74rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.f input,.f select,.f textarea{font:inherit;font-size:1rem;letter-spacing:0;text-transform:none;color:var(--ink);width:100%;
+  background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;transition:.2s}
+.f textarea{resize:vertical;min-height:84px}
+.f input:focus,.f select:focus,.f textarea:focus{outline:0;border-color:var(--rose);box-shadow:0 0 0 4px rgba(212,80,108,.14)}
+.status{min-height:1.4em;font-size:.93rem;text-align:center}
+.status.ok{color:#2f7a4b}.status.err{color:#b3263f}
+.empty{color:var(--muted);font-size:.95rem;font-style:italic;font-family:var(--serif)}
 
-  /* DATE FORM */
-  .date{padding:90px 0}
-  .dform{max-width:640px;margin:0 auto;padding:36px 34px;border-radius:26px;display:grid;gap:18px;
-    background:linear-gradient(160deg,rgba(45,20,34,.9),rgba(31,14,23,.9));border:1px solid rgba(255,143,171,.3);
-    box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 60px rgba(255,77,121,.12)}
-  .dform .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .dform label{display:grid;gap:6px;font-size:.85rem;color:var(--rose2);letter-spacing:.04em;text-transform:uppercase}
-  .dform input,.dform select,.dform textarea{font:inherit;font-size:1rem;text-transform:none;letter-spacing:0;color:var(--cream);
-    background:rgba(255,255,255,.06);border:1px solid rgba(255,143,171,.25);border-radius:14px;padding:12px 14px;color-scheme:dark;transition:.3s;width:100%}
-  .dform select option{background:#2d1422}
-  .dform input:focus,.dform select:focus,.dform textarea:focus{outline:0;border-color:var(--rose);box-shadow:0 0 0 4px rgba(255,77,121,.2)}
-  .dform button{border:0;cursor:pointer;font:inherit;font-weight:500;font-size:1.05rem;color:#fff;padding:15px;border-radius:999px;
-    background:linear-gradient(135deg,var(--rose),#ff7a9c);box-shadow:0 12px 30px rgba(255,77,121,.45);transition:.3s}
-  .dform button:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(255,77,121,.6)}
-  .dform button:disabled{opacity:.6;cursor:wait}
-  .status{text-align:center;min-height:1.4em;font-size:.95rem}
-  .status.ok{color:#9be7b0}.status.err{color:#ff9aa8}
-  @media(max-width:560px){.dform{padding:26px 20px}.dform .row{grid-template-columns:1fr}}
+/* ===== CALENDAR ===== */
+.cal{display:grid;grid-template-columns:1.2fr 1fr;gap:24px;align-items:start}
+.cal-head{display:flex;align-items:center;gap:8px;margin-bottom:18px}
+.cal-head h3{font-size:1.7rem;flex:1;text-transform:capitalize}
+.icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;display:grid;place-items:center;font-size:1.1rem;color:var(--wine);transition:.2s}
+.icon-btn:hover{background:var(--wine);color:#fff;border-color:var(--wine)}
+.today-btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-size:.85rem;color:var(--wine)}
+.dow,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dow span{text-align:center;font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:6px 0}
+.day{aspect-ratio:1;border:1px solid transparent;background:transparent;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  font-variant-numeric:tabular-nums;font-size:.98rem;transition:.18s;min-width:0}
+.day:hover{background:var(--paper-2)}
+.day.out{opacity:.32}
+.day.today{border-color:var(--wine);color:var(--wine);font-weight:600}
+.day.sel{background:var(--wine);color:#fff;border-color:var(--wine)}
+.day .dots{display:flex;gap:3px;height:6px}
+.day .dots i{width:6px;height:6px;border-radius:50%;background:var(--rose)}
+.day .dots i.f{background:var(--gold)}
+.day.sel .dots i{background:#fff}
+.legend{display:flex;gap:18px;justify-content:center;margin-top:16px;font-size:.82rem;color:var(--muted)}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--rose);margin-right:6px;vertical-align:1px}
+.legend i.f{background:var(--gold)}
+.side h4{font-family:var(--serif);font-weight:400;font-size:1.35rem;text-transform:none;margin-bottom:12px}
+.side h4::first-letter{text-transform:uppercase}
+.side .f{margin-top:18px;padding-top:18px;border-top:1px dashed var(--line)}
+.side .f .acts{display:flex;gap:10px;flex-wrap:wrap}
+.ev{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:#fff;border:1px solid var(--line);margin-bottom:8px;cursor:pointer;transition:.2s}
+.ev:hover{border-color:rgba(125,22,49,.35)}
+.ev .em{font-size:1.3rem;line-height:1.3;width:30px;text-align:center;flex:none}
+.ev .evb{flex:1;min-width:0}
+.ev b{font-weight:600;display:block;line-height:1.35}
+.ev small{color:var(--muted);font-size:.84rem}
+.ev small .soon{color:var(--wine);font-weight:600}
+.ev p{color:var(--ink-2);font-size:.92rem;margin-top:2px;overflow-wrap:anywhere}
+.ev .eva{display:flex;gap:4px;flex:none}
+.ev .eva button{width:30px;height:30px;border-radius:50%;border:0;background:transparent;color:var(--muted);font-size:1rem}
+.ev .eva button:hover{background:var(--paper-2);color:var(--wine)}
+.ev.past{border-left:3px solid var(--rose)}.ev.fut{border-left:3px solid var(--gold)}
+.cal-lists{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px}
+.cal-lists h4{font-family:var(--serif);font-weight:400;font-size:1.45rem;margin-bottom:14px;display:flex;align-items:center;gap:10px}
 
+/* ===== PLANS ===== */
+.plans{max-width:780px;margin:0 auto}
+.prog{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
+.prog b{font-family:var(--serif);font-size:1.4rem;font-weight:400}
+.prog span{color:var(--muted);font-size:.9rem}
+.bar{height:10px;border-radius:999px;background:var(--paper-2);overflow:hidden;margin-bottom:24px}
+.bar i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--wine),var(--rose));transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.add{display:flex;gap:10px}
+.add select{width:auto;flex:none}
+.add input{flex:1;min-width:0}
+.chips{display:flex;gap:8px;margin:20px 0 14px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 15px;font-size:.86rem;color:var(--ink-2)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.plist{list-style:none;display:grid;gap:8px}
+.plan{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:18px;background:#fff;border:1px solid var(--line);transition:.3s}
+.chk{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid var(--wine);background:#fff;display:grid;place-items:center;color:#fff;font-size:.95rem;transition:.25s}
+.chk::after{content:"♥";transform:scale(0);transition:transform .3s cubic-bezier(.3,1.6,.5,1)}
+.plan.done .chk{background:var(--wine)}
+.plan.done .chk::after{transform:scale(1)}
+.plan .pb{flex:1;min-width:0}
+.plan .pt{display:block;overflow-wrap:anywhere;transition:.3s}
+.plan.done .pt{text-decoration:line-through;text-decoration-color:var(--rose);color:var(--muted)}
+.plan small{font-size:.8rem;color:var(--rose);font-family:var(--hand);font-size:1.15rem}
+.pdel{border:0;background:transparent;width:32px;height:32px;border-radius:50%;color:var(--muted);font-size:1.2rem;opacity:.5;transition:.2s;flex:none}
+.plan:hover .pdel{opacity:1}.pdel:hover{background:var(--paper-2);color:var(--wine)}
+.local-note{margin-top:20px;font-size:.82rem;color:var(--muted);text-align:center}
 
-  /* GATE + INTRO */
-  body.locked{overflow:hidden}
-  .gate,.intro{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;text-align:center;padding:24px;
-    background:radial-gradient(circle at 50% 40%,#3a1428,#12060b 70%);transition:opacity 1s,visibility 1s}
-  .gate.hide,.intro.hide{opacity:0;visibility:hidden;pointer-events:none}
-  .gate .lock{font-size:3.2rem;animation:beat 1.6s infinite}
-  .gate h2{font-size:clamp(1.8rem,6vw,2.6rem);font-style:italic;margin:10px 0 6px}
-  .gate p{color:var(--muted);margin-bottom:22px}
-  .gate form{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-  .gate input{font:inherit;font-size:1.1rem;text-align:center;letter-spacing:.3em;color:var(--cream);width:220px;
-    background:rgba(255,255,255,.07);border:1px solid rgba(255,143,171,.4);border-radius:999px;padding:12px 18px}
-  .gate input:focus{outline:0;border-color:var(--rose);box-shadow:0 0 0 4px rgba(255,77,121,.22)}
-  .gate button,.surprise button{border:0;cursor:pointer;font:inherit;font-weight:500;color:#fff;padding:12px 26px;border-radius:999px;
-    background:linear-gradient(135deg,var(--rose),#ff7a9c);box-shadow:0 10px 28px rgba(255,77,121,.45);transition:.3s}
-  .gate button:hover,.surprise button:hover{transform:translateY(-2px)}
-  .gate .err{color:#ff9aa8;min-height:1.5em;margin-top:14px;font-size:.95rem}
-  .gate.shake form{animation:shake .45s}
-  @keyframes shake{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
-  .intro{background:#12060b;z-index:999}
-  .intro .bigheart{font-size:clamp(5rem,22vw,9rem);color:var(--rose);animation:beat 1.1s infinite;filter:drop-shadow(0 0 40px rgba(255,77,121,.8))}
-  .intro .lines{min-height:5.5em;margin-top:10px}
-  .intro .lines p{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.3rem,4.5vw,2rem);opacity:0;transform:translateY(12px);transition:1s}
-  .intro .lines p.on{opacity:1;transform:none}
-  .intro .lines p.big{font-family:'Caveat',cursive;font-size:clamp(2.2rem,8vw,3.6rem);color:var(--rose2);font-style:normal}
+/* ===== GALLERY ===== */
+.masonry{columns:3 250px;column-gap:26px}
+.masonry .pol{break-inside:avoid;margin:0 0 34px;display:inline-block;width:100%}
+.masonry .pol:nth-child(3n+1){--r:-1.8deg}.masonry .pol:nth-child(3n+2){--r:1.4deg}.masonry .pol:nth-child(3n){--r:-.6deg}
+.masonry .pol img{aspect-ratio:auto}
+.masonry .pol:nth-child(4n+2)::before{background:rgba(233,214,170,.75)}
 
-  /* MUSIC */
-  .music{position:fixed;left:16px;bottom:16px;z-index:60;width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,143,171,.45);
-    background:rgba(26,11,18,.75);backdrop-filter:blur(10px);color:var(--rose2);font-size:1.4rem;cursor:pointer;display:none;place-items:center}
-  .music.show{display:grid}
-  .music.on{animation:beat 1.6s infinite;box-shadow:0 0 24px rgba(255,77,121,.5)}
-  .music.off::after{content:"";position:absolute;width:30px;height:2px;background:var(--rose2);transform:rotate(-45deg)}
-  #ytwrap{position:fixed;width:1px;height:1px;left:-9999px;top:0;overflow:hidden}
+/* ===== GUESTBOOK ===== */
+.gb{display:grid;grid-template-columns:1fr 1.1fr;gap:28px;align-items:start}
+.gb .hint{color:var(--ink-2);margin-bottom:4px}
+.notes{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px}
+.note{padding:18px 18px 16px;background:#fff4c4;box-shadow:0 14px 26px -16px rgba(60,40,10,.45);transform:rotate(-1.2deg);position:relative}
+.note:nth-child(even){background:var(--blush);transform:rotate(1.4deg)}
+.note:nth-child(3n){background:#e9f0e2;transform:rotate(-.4deg)}
+.note p{font-family:var(--hand);font-size:1.45rem;line-height:1.2;overflow-wrap:anywhere}
+.note small{display:block;margin-top:10px;font-size:.78rem;color:var(--ink-2)}
 
-  /* TIMELINE */
-  .osa{padding:80px 0}
-  .tl{position:relative;max-width:820px;margin:0 auto}
-  .tl::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);
-    background:linear-gradient(var(--rose),rgba(255,77,121,.1))}
-  .tl-item{position:relative;width:50%;padding:0 38px 46px 0}
-  .tl-item:nth-child(even){margin-left:50%;padding:0 0 46px 38px}
-  .tl-item::before{content:"♥";position:absolute;right:-13px;top:2px;width:26px;height:26px;display:grid;place-items:center;
-    color:var(--rose);font-size:1.1rem;background:var(--bg);border-radius:50%;animation:beat 2s infinite}
-  .tl-item:nth-child(even)::before{right:auto;left:-13px}
-  .tl-card{padding:20px 22px;border-radius:18px;background:linear-gradient(160deg,var(--card),#1f0e17);
-    border:1px solid rgba(255,143,171,.22);box-shadow:0 14px 40px rgba(0,0,0,.4)}
-  .tl-card img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;margin-bottom:12px;cursor:zoom-in;display:block}
-  .tl-card time{font-family:'Caveat',cursive;font-size:1.5rem;color:var(--gold)}
-  .tl-card h3{font-size:1.35rem;margin:2px 0 6px}
-  .tl-card p{color:var(--muted);font-size:.98rem}
-  @media(max-width:680px){
-    .tl::before{left:14px}
-    .tl-item,.tl-item:nth-child(even){width:100%;margin-left:0;padding:0 0 34px 44px}
-    .tl-item::before,.tl-item:nth-child(even)::before{left:1px;right:auto}
-  }
+/* ===== INVITE (DATE) ===== */
+.invite{display:grid;grid-template-columns:.85fr 1.15fr;border-radius:32px;overflow:hidden;box-shadow:var(--shadow);background:var(--wine-2);color:#fbeee8}
+.invite .l{padding:clamp(28px,5vw,52px);background:radial-gradient(circle at 20% 15%,rgba(226,96,123,.45),transparent 55%),linear-gradient(160deg,var(--wine),var(--wine-2));display:flex;flex-direction:column;justify-content:space-between;gap:24px;position:relative}
+.invite .l .hand{font-size:2.2rem;color:#ffc9d3;line-height:1}
+.invite .l h3{font-size:clamp(2.2rem,5vw,3.2rem);font-weight:300;font-style:italic;margin-top:8px}
+.invite .l p{opacity:.8;max-width:300px}
+.invite .l .big{font-size:5rem;line-height:1;opacity:.9}
+.invite .r{padding:clamp(24px,4.5vw,46px);background:rgba(0,0,0,.12)}
+.invite .f label{color:rgba(251,238,232,.7)}
+.invite .f input,.invite .f select,.invite .f textarea{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.18);color:#fff;color-scheme:dark}
+.invite .f select option{background:var(--wine-2)}
+.invite .f input::placeholder,.invite .f textarea::placeholder{color:rgba(255,255,255,.4)}
+.invite .status.ok{color:#a9e8bd}.invite .status.err{color:#ffb3c1}
 
-  /* SURPRISE */
-  .surprise{padding:40px 0 120px;text-align:center}
-  .surprise h2{font-size:clamp(1.8rem,5vw,2.8rem);margin-bottom:10px}
-  .surprise p{color:var(--muted);margin-bottom:26px}
-  .surprise button{font-size:1.2rem;padding:18px 40px;animation:beat 1.8s infinite}
-  .modal{position:fixed;inset:0;z-index:200;display:none;place-items:center;padding:20px;background:rgba(10,3,7,.85)}
-  .modal.open{display:grid}
-  .modal .card{max-width:560px;text-align:center;padding:48px 36px;border-radius:26px;position:relative;
-    background:linear-gradient(160deg,#fff1ec,#ffdde3);color:#4a1a2a;box-shadow:0 30px 90px rgba(255,77,121,.4);
-    animation:pop .7s cubic-bezier(.2,1.4,.4,1)}
-  @keyframes pop{from{transform:scale(.6);opacity:0}}
-  .modal h3{font-size:2.2rem;color:#b3123f;font-style:italic;margin-bottom:12px}
-  .modal p{font-size:1.1rem;margin-bottom:10px}
-  .modal .close{position:absolute;top:8px;right:16px;background:none;border:0;font-size:2rem;color:#b3123f;cursor:pointer}
-  canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:300}
+/* ===== LETTER ===== */
+.letter-paper{max-width:700px;margin:0 auto;position:relative;padding:clamp(40px,7vw,70px) clamp(26px,6vw,64px);background:#fffdf8;transform:rotate(-.6deg);box-shadow:var(--shadow);
+  background-image:repeating-linear-gradient(transparent 0 37px,rgba(125,22,49,.08) 37px 38px);background-position:0 18px}
+.letter-paper .stampbox{position:absolute;top:22px;right:22px;width:70px;height:84px;border:2px dashed rgba(125,22,49,.4);display:grid;place-items:center;color:var(--wine);font-size:2rem;transform:rotate(6deg);background:var(--blush)}
+.letter-paper h2{font-style:italic;color:var(--wine);font-size:clamp(2rem,5vw,2.8rem);margin-bottom:20px}
+.letter-paper p{font-family:var(--serif);font-size:1.18rem;line-height:38px;color:var(--ink-2);margin-bottom:0}
+.letter-paper .sign{font-family:var(--hand);font-size:2.4rem;color:var(--wine);margin-top:22px;text-align:right}
 
-  .anniv{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
-  .pill{padding:12px 22px;border-radius:999px;background:rgba(255,77,121,.12);border:1px solid rgba(255,143,171,.35);color:var(--cream);font-size:.98rem}
-  .pill b{color:var(--rose2);font-family:'Playfair Display',serif;font-size:1.15rem}
-  .vzkaz{padding:70px 0 40px}
-  .gbhint{color:var(--muted);text-align:center;font-size:.95rem}
-  .gblist{max-width:640px;margin:26px auto 0;display:grid;gap:12px}
-  .gbitem{padding:16px 20px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,143,171,.2)}
-  .gbitem small{color:var(--rose2)}.gbitem p{margin-top:4px}
-  /* reveal */
-  .rv{opacity:0;transform:translateY(40px);transition:opacity 1s,transform 1s}
-  .rv.in{opacity:1;transform:none}
+/* ===== SURPRISE ===== */
+.surprise{text-align:center}
+.surprise h2{font-size:clamp(2rem,5vw,3rem)}
+.surprise p{color:var(--ink-2);margin:10px 0 30px}
+.gift{width:150px;height:150px;border-radius:50%;border:0;background:radial-gradient(circle at 35% 30%,#e2607b,var(--wine) 60%,var(--wine-2));color:#fff;
+  font-family:var(--hand);font-size:1.7rem;line-height:1.1;box-shadow:0 26px 50px -18px rgba(125,22,49,.8),inset 0 -8px 20px rgba(0,0,0,.2);animation:beat 2.2s infinite}
+.modal{position:fixed;inset:0;z-index:200;display:none;place-items:center;padding:20px;background:rgba(30,8,14,.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.modal.open{display:grid}
+.modal .mc{max-width:540px;width:100%;text-align:center;padding:52px 34px 44px;border-radius:30px;position:relative;background:#fffdf8;box-shadow:0 40px 90px -20px rgba(0,0,0,.6);animation:pop .7s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+.modal h3{font-size:clamp(2.4rem,7vw,3.2rem);color:var(--wine);font-style:italic;font-weight:300;margin-bottom:16px}
+.modal p{font-family:var(--serif);font-size:1.2rem;color:var(--ink-2);margin-bottom:8px}
+.modal .close{position:absolute;top:12px;right:16px;border:0;background:none;font-size:2rem;color:var(--wine)}
+canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:300}
 
-  @media(max-width:760px){
-    .chapter{grid-template-columns:1fr;gap:30px;margin-bottom:70px}
-    .chapter:nth-child(even) .pic{order:0}
-    .paper{padding:40px 24px}
-    .box{min-width:78px}.box b{font-size:2rem}
-  }
-  @media(prefers-reduced-motion:reduce){
-    *{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}
-  }
+/* ===== FOOTER ===== */
+footer{position:relative;z-index:1;background:var(--wine-2);color:#fbeee8;text-align:center;padding:60px 20px 70px;font-family:var(--serif);font-style:italic;font-size:1.15rem;line-height:1.8}
+
+/* ===== MUSIC / LIGHTBOX / TOAST ===== */
+.music{position:fixed;left:16px;bottom:16px;z-index:60;width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:rgba(255,250,243,.9);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--wine);box-shadow:0 12px 28px -12px rgba(60,20,30,.45);display:grid;place-items:center}
+.music .bars{display:none;gap:3px;align-items:flex-end;height:18px}
+.music .bars i{width:3px;background:var(--wine);border-radius:2px;animation:eq 1s infinite ease-in-out}
+.music .bars i:nth-child(2){animation-delay:.2s}.music .bars i:nth-child(3){animation-delay:.4s}
+@keyframes eq{0%,100%{height:5px}50%{height:18px}}
+.music.on .bars{display:flex}.music.on .note{display:none}
+.music .note{font-size:1.3rem}
+#ytwrap{position:fixed;width:1px;height:1px;left:-9999px;top:0;overflow:hidden}
+.lb{position:fixed;inset:0;background:rgba(20,6,10,.94);z-index:400;display:none;place-items:center;padding:20px}
+.lb.open{display:grid}
+.lb img{max-width:min(95vw,1200px);max-height:86vh;border-radius:6px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.lb button{position:absolute;border:0;background:none;color:#fbeee8;font-size:2.6rem;padding:12px;opacity:.75}
+.lb button:hover{opacity:1}
+.lb .x{top:8px;right:14px}.lb .p{left:6px;top:50%;transform:translateY(-50%)}.lb .n{right:6px;top:50%;transform:translateY(-50%)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);z-index:500;background:var(--ink);color:#fff;padding:11px 22px;border-radius:999px;font-size:.92rem;opacity:0;transition:.35s;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(28px);transition:opacity 1s,transform 1s cubic-bezier(.2,.8,.2,1)}
+.rv.in{opacity:1;transform:none}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+  .cal{grid-template-columns:1fr}
+  .gb{grid-template-columns:1fr}
+  .invite{grid-template-columns:1fr}
+  .invite .l .big{display:none}
+}
+@media(max-width:760px){
+  .nav{left:12px;right:12px;transform:none;max-width:none}
+  .chapter{grid-template-columns:1fr;gap:34px}
+  .chapter:nth-child(even) .pol{order:0}
+  .chapter .pol{max-width:340px}
+  .count-card{grid-template-columns:repeat(2,1fr)}
+  .count-card div:nth-child(2){border-right:0}
+  .count-card div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .tl::before{left:10px}
+  .tl-item,.tl-item:nth-child(even){width:100%;margin-left:0;padding:0 0 38px 40px}
+  .tl-item::after,.tl-item:nth-child(even)::after{left:0;right:auto;top:24px}
+  .cal-lists{grid-template-columns:1fr}
+  .f .row2{grid-template-columns:1fr}
+  .letter-paper .stampbox{width:54px;height:64px;font-size:1.5rem;top:14px;right:14px}
+}
+@media(max-width:420px){
+  .day{border-radius:10px;font-size:.9rem}
+  .add{flex-wrap:wrap}.add input{flex-basis:100%}.add .btn{flex:1}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
 </style>
 </head>
 <body class="locked">
+
+<!-- ========== HESLO ========== -->
 <div class="gate" id="gate">
-  <div>
-    <div class="lock">🔒</div>
+  <div class="gate-card">
+    <div class="lock"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.5 2.9 4.5 6.6 4.5c2.2 0 3.6 1.2 4.4 2.5.8-1.3 2.2-2.5 4.4-2.5 3.7 0 5.7 4 4.2 7.3C19.5 16.4 12 21 12 21z"/></svg></div>
     <h2>Náš vzpomínkový web</h2>
     <p>Zadej heslo a pojď se podívat, jaké vzpomínky spolu máme ♥</p>
-    <form id="gateForm"><input id="pw" type="password" inputmode="numeric" autocomplete="off" placeholder="••••••••" aria-label="Heslo"><button>Odemknout</button></form>
-    <div class="err" id="gateErr"></div>
+    <form id="gateForm"><input id="pw" type="password" inputmode="numeric" autocomplete="off" placeholder="••••••••" aria-label="Heslo"><button class="btn light">Odemknout</button></form>
+    <div class="err" id="gateErr" role="alert"></div>
   </div>
 </div>
 <div class="intro hide" id="intro">
   <div>
     <div class="bigheart">♥</div>
-    <div class="lines" id="introLines">
+    <div class="lines">
       <p>Něco jsem pro nás připravil…</p>
       <p>Proto, abychom nezapomněli…</p>
       <p class="big">a mohli se ohlédnout za tím, co všechno jsme spolu prožili ♥</p>
     </div>
   </div>
 </div>
-<button class="music" id="music" aria-label="Hudba" title="Hudba">♪</button>
-<div id="ytwrap"><div id="yt"></div></div>
-<canvas id="confetti"></canvas>
+
 <canvas id="hearts"></canvas>
+<canvas id="confetti"></canvas>
+<button class="music" id="music" aria-label="Hudba" title="Hudba"><span class="bars"><i></i><i></i><i></i></span><span class="note">♪</span></button>
+<div id="ytwrap"><div id="yt"></div></div>
+
 <nav class="nav" id="nav">
-  <a href="#top" class="logo script">♥ my dva</a>
-  <div><a href="#cas">Spolu</a><a href="#pribeh">Příběh</a><a href="#osa">Osa</a><a href="#galerie">Galerie</a><a href="#vzkaz">Vzkaz</a><a href="#date" class="cta">Domluvit date</a></div>
+  <a href="#top" class="logo">♥ my dva</a>
+  <a href="#spolu">Spolu</a><a href="#pribeh">Příběh</a><a href="#osa">Osa</a><a href="#kalendar">Kalendář</a><a href="#plany">Plány</a><a href="#galerie">Galerie</a><a href="#vzkaz">Vzkaz</a><a href="#date" class="cta">Domluvit date</a>
 </nav>
 
+<!-- ========== ÚVOD ========== -->
 <section class="hero" id="top">
-  <div>
-    <div class="eyebrow script">Náš úžasný život spolu</div>
-    <h1>Jen my <span>dva</span></h1>
-    <p class="sub">Pár vzpomínek, smíchu, ty, já<br>a všechno, co k tomu patří <span class="heartbeat">♥</span></p>
-    <a class="scroll" href="#cas">↓ pokračuj</a>
+  <div class="bg" role="img" aria-label="Východ slunce na Sněžce"></div>
+  <div class="in">
+    <div class="eyebrow">Náš úžasný život spolu</div>
+    <h1>Jen my <em>dva</em></h1>
+    <p class="sub">Pár vzpomínek, smíchu, ty, já<br>a všechno, co k tomu patří ♥</p>
+    <div class="row">
+      <a class="btn light" href="#spolu">↓ pokračuj</a>
+      <span class="stamp">05 · 06 · 2026</span>
+    </div>
   </div>
 </section>
 
-<section class="counter" id="cas">
+<!-- ========== 01 SPOLU ========== -->
+<section class="sec" id="spolu">
+  <div class="wrap">
+    <header class="sh rv">
+      <span class="no">01</span>
+      <h2>Jsme <em>spolu</em></h2>
+      <p>Od 5. června 2026 a každý den se naše láska jen zvětšuje</p>
+    </header>
+    <div class="count-card rv">
+      <div><b id="c-d">–</b><small>dní</small></div>
+      <div><b id="c-h">–</b><small>hodin</small></div>
+      <div><b id="c-m">–</b><small>minut</small></div>
+      <div><b id="c-s">–</b><small>sekund</small></div>
+    </div>
+    <div class="anniv rv"><div class="pill" id="anniv"></div><div class="pill" id="weeks"></div></div>
+  </div>
+</section>
+
+<!-- ========== 02 PŘÍBĚH ========== -->
+<section class="sec" id="pribeh" style="padding-top:0">
+  <div class="wrap">
+    <header class="sh rv">
+      <span class="no">02</span>
+      <div class="kick">kapitoly</div>
+      <h2>Náš <em>příběh</em></h2>
+    </header>
+
+    <div class="chapters">
+      <div class="chapter rv">
+        <figure class="pol"><img src="img/9.jpg" alt="Objetí v obýváku" loading="lazy"><figcaption>„Domov je tam, kde jsi ty"</figcaption></figure>
+        <div class="txt"><div class="cn">Kapitola I</div><h3>Objetí, které zahřeje</h3>
+          <p>Upřímně nevím, co k tomu dodat. Naše objetí je místo, kde se cítíme v bezpečí a milovaní.</p></div>
+      </div>
+      <div class="chapter rv">
+        <figure class="pol"><img src="img/2.jpg" alt="Společné selfie v zrcadle" loading="lazy"><figcaption>„My dva a vzpomínky do konce života"</figcaption></figure>
+        <div class="txt"><div class="cn">Kapitola II</div><h3>Naše selfie</h3>
+          <p>Naše fotečky jsou prostě komické: já, který se na každé fotce tvářím jako kakabus, a ty, která se snažíš, aby fotky byly výjimečné.</p></div>
+      </div>
+      <div class="chapter rv">
+        <figure class="pol"><img src="img/8.jpg" alt="Stejné svetry v převlékárně" loading="lazy"><figcaption>„ladíme i bez domluvy"</figcaption></figure>
+        <div class="txt"><div class="cn">Kapitola III</div><h3>Jiné outfity, ale ladí</h3>
+          <p>Upřímně se mi hrozně líbí, že ať se oblékneme jakkoli, spolu vždycky vypadáme nádherně a hrozně nám to spolu sluší.</p></div>
+      </div>
+      <div class="chapter rv">
+        <figure class="pol"><img src="img/4.jpg" alt="Pusa na tvář" loading="lazy"><figcaption>„dobrou noc, lásko"</figcaption></figure>
+        <div class="txt"><div class="cn">Kapitola IV</div><h3>Pusinka na dobrou noc</h3>
+          <p>V růžovém světle, v tichu, jen ty a já. Naše večery jsou výjimečné, i když někdy nejdou úplně podle plánu. Vždycky ale usínáme v objetí a s pocitem lásky.</p></div>
+      </div>
+      <div class="chapter rv">
+        <figure class="pol"><img src="img/14.jpg" alt="Selfie na gauči" loading="lazy"><figcaption>„Ještě chvilku, prosím"</figcaption></figure>
+        <div class="txt"><div class="cn">Kapitola V</div><h3>Lazy days</h3>
+          <p>Postel, mikina, objetí jsou pro mě ty nejbližší a nejhezčí chvilky. I když jsme na jednu stranu zranitelní, na druhou jsme spolu tak „v pohodě", že nám to vůbec nevadí.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 03 OSA ========== -->
+<section class="sec" id="osa" style="padding-top:0">
+  <div class="wrap">
+    <header class="sh rv">
+      <span class="no">03</span>
+      <div class="kick">krok za krokem</div>
+      <h2>Naše <em>časová osa</em></h2>
+    </header>
+    <div class="tl">
+      <div class="tl-item rv"><div class="tl-card"><img src="img/18.jpg" alt="" loading="lazy"><div class="b"><time>11. dubna</time><h3>První přespávačka</h3><p>Byli jsme v Café baru a tvoji rodiče nebyli doma, tak jsem u tebe přespal. Dával jsem ti masáž a bylo nám spolu moc dobře. Domů se mi vůbec nechtělo.</p></div></div></div>
+      <div class="tl-item rv"><div class="tl-card"><img src="img/32.jpg" alt="" loading="lazy"><div class="b"><time>30. dubna</time><h3>Majáles v Praze</h3><p>Náš výlet do Prahy na Majáles a procházky po Praze. Hudba, dobré počasí a společně strávený čas, na který nikdy nezapomeneme.</p></div></div></div>
+      <div class="tl-item rv"><div class="tl-card"><img src="img/24.jpg" alt="" loading="lazy"><div class="b"><time>29. května</time><h3>Za tebou na Lemberk</h3><p>Když jsi měla praxi, jezdil jsem za tebou na Lemberk. I když to bylo jen na chvilku a cesta byla dlouhá, vyplatilo se to, protože vzpomínky na trojmezí, kino a přespávačku jen tak nezapomeneme.</p></div></div></div>
+      <div class="tl-item rv"><div class="tl-card"><img src="img/25.jpg" alt="" loading="lazy"><div class="b"><time>5. června</time><h3>Chodíš se mnou?</h3><p>Než jsem odletěl na Maltu, zeptal jsem se tě, jestli se mnou budeš chodit. Na štěstí jsi řekla ano a od té doby žijeme náš krásný příběh.</p></div></div></div>
+      <div class="tl-item rv"><div class="tl-card"><img src="img/20.jpg" alt="" loading="lazy"><div class="b"><time>6 týdnů na Maltě</time><h3>Nejtěžší období</h3><p>Šest týdnů daleko od sebe. Volali jsme si skoro každý den a právě tehdy jsem poznal, jak moc mi chybíš.</p></div></div></div>
+      <div class="tl-item rv"><div class="tl-card"><img src="img/15.jpg" alt="" loading="lazy"><div class="b"><time>19. července</time><h3>Východ slunce na Sněžce</h3><p>Jeli jsme spolu do Janských Lázní a vyšlapali jsme si východ slunce na Sněžku. Nejhezčí ráno.</p></div></div></div>
+      <div class="tl-item rv"><div class="tl-card"><img src="img/23.jpg" alt="" loading="lazy"><div class="b"><time>Od té doby až do stáří</time><h3>Miluju tě nejvíc na světě</h3><p>Chci s tebou strávit zbytek života a plnit si hlavu vzpomínkami na nás dva, protože mě děláš nejšťastnějším klukem na světě ♥</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 04 KALENDÁŘ ========== -->
+<section class="sec" id="kalendar" style="padding-top:0">
+  <div class="wrap">
+    <header class="sh rv">
+      <span class="no">04</span>
+      <div class="kick">vzpomínky i plány</div>
+      <h2>Náš <em>kalendář</em></h2>
+      <p>Klikni na den a zapiš, co se stalo nebo co nás čeká.</p>
+    </header>
+    <div class="cal rv">
+      <div class="card">
+        <div class="cal-head">
+          <h3 id="calTitle"></h3>
+          <button class="today-btn" id="calToday" type="button">Dnes</button>
+          <button class="icon-btn" id="calPrev" type="button" aria-label="Předchozí měsíc">‹</button>
+          <button class="icon-btn" id="calNext" type="button" aria-label="Další měsíc">›</button>
+        </div>
+        <div class="dow"><span>Po</span><span>Út</span><span>St</span><span>Čt</span><span>Pá</span><span>So</span><span>Ne</span></div>
+        <div class="days" id="calDays"></div>
+        <div class="legend"><span><i></i>vzpomínka</span><span><i class="f"></i>co nás čeká</span></div>
+      </div>
+      <div class="card side">
+        <h4 id="selTitle"></h4>
+        <div id="dayList"></div>
+        <form class="f" id="evForm" autocomplete="off">
+          <div class="row2">
+            <label>Datum<input type="date" name="date" required></label>
+            <label>Ikonka
+              <select name="icon"><option>♥</option><option>💋</option><option>🎉</option><option>✈️</option><option>🎬</option><option>🍝</option><option>🎂</option><option>🏔️</option><option>🎵</option><option>⭐</option></select>
+            </label>
+          </div>
+          <label>Co se stalo / co plánujeme<input name="title" required maxlength="80" placeholder="Třeba: Naše první rande"></label>
+          <label>Poznámka<textarea name="note" rows="2" maxlength="400" placeholder="Pár slov, ať si to pamatujeme…"></textarea></label>
+          <div class="acts"><button class="btn" id="evSubmit">Přidat do kalendáře</button><button class="btn ghost" type="button" id="evCancel" hidden>Zrušit</button></div>
+        </form>
+      </div>
+    </div>
+    <div class="cal-lists rv">
+      <div class="card"><h4>✨ Co nás čeká</h4><div id="upList"></div></div>
+      <div class="card"><h4>📸 Vzpomínky</h4><div id="pastList"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 05 PLÁNY ========== -->
+<section class="sec" id="plany" style="padding-top:0">
+  <div class="wrap">
+    <header class="sh rv">
+      <span class="no">05</span>
+      <div class="kick">co spolu ještě zažijeme</div>
+      <h2>Společné <em>plány</em></h2>
+    </header>
+    <div class="plans card rv">
+      <div class="prog"><b id="progLabel"></b><span id="progPct"></span></div>
+      <div class="bar"><i id="progBar"></i></div>
+      <form class="f add" id="planForm" autocomplete="off">
+        <select name="icon" aria-label="Ikonka"><option>♥</option><option>✈️</option><option>🏖️</option><option>🏔️</option><option>🎬</option><option>🎵</option><option>🍝</option><option>🎁</option><option>⭐</option></select>
+        <input name="text" required maxlength="100" placeholder="Co spolu chceme zažít?" aria-label="Nový plán">
+        <button class="btn">Přidat</button>
+      </form>
+      <div class="chips" id="planChips">
+        <button class="chip on" data-f="all" type="button">Vše</button>
+        <button class="chip" data-f="todo" type="button">Čeká nás</button>
+        <button class="chip" data-f="done" type="button">Splněno</button>
+      </div>
+      <ul class="plist" id="planList"></ul>
+      <p class="local-note">Kalendář a plány se ukládají v tomhle prohlížeči.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 06 GALERIE ========== -->
+<section class="sec" id="galerie" style="padding-top:0">
+  <div class="wrap">
+    <header class="sh rv">
+      <span class="no">06</span>
+      <div class="kick">momentky</div>
+      <h2>Naše výstava <em>unikátů</em></h2>
+    </header>
+    <div class="masonry">
+      <figure class="pol rv"><img src="img/6.jpg" alt="" loading="lazy"><figcaption>Dvojka ve svetrech</figcaption></figure>
+      <figure class="pol rv"><img src="img/12.jpg" alt="" loading="lazy"><figcaption>Klasicky v TJ</figcaption></figure>
+      <figure class="pol rv"><img src="img/5.jpg" alt="" loading="lazy"><figcaption>Nádherný úsměv od ucha k uchu</figcaption></figure>
+      <figure class="pol rv"><img src="img/7.jpg" alt="" loading="lazy"><figcaption>To je jasné, že se tam musíme vyfotit</figcaption></figure>
+      <figure class="pol rv"><img src="img/13.jpg" alt="" loading="lazy"><figcaption>To jen ten gauč a lazy days</figcaption></figure>
+      <figure class="pol rv"><img src="img/10.jpg" alt="" loading="lazy"><figcaption>Rozmazaní, ale šťastní</figcaption></figure>
+      <figure class="pol rv"><img src="img/1.jpg" alt="" loading="lazy"><figcaption>No jo, to bylo vysloveně bahno</figcaption></figure>
+      <figure class="pol rv"><img src="img/9.jpg" alt="" loading="lazy"><figcaption>Ten foťáček má něco do sebe</figcaption></figure>
+      <figure class="pol rv"><img src="img/17.jpg" alt="" loading="lazy"><figcaption>Pusinkaaaaaaa</figcaption></figure>
+      <figure class="pol rv"><img src="img/19.jpg" alt="" loading="lazy"><figcaption>Crazy duo</figcaption></figure>
+      <figure class="pol rv"><img src="img/22.jpg" alt="" loading="lazy"><figcaption>Neměli jsme si kam sednout</figcaption></figure>
+      <figure class="pol rv"><img src="img/26.jpg" alt="" loading="lazy"><figcaption>Pevně v náručí</figcaption></figure>
+      <figure class="pol rv"><img src="img/28.jpg" alt="" loading="lazy"><figcaption>Čistá láska</figcaption></figure>
+      <figure class="pol rv"><img src="img/29.jpg" alt="" loading="lazy"><figcaption>Ještěd</figcaption></figure>
+      <figure class="pol rv"><img src="img/30.jpg" alt="" loading="lazy"><figcaption>Pejsek nevypadá moc šťastně</figcaption></figure>
+      <figure class="pol rv"><img src="img/31.jpg" alt="" loading="lazy"><figcaption>Jazyky ven</figcaption></figure>
+      <figure class="pol rv"><img src="img/33.jpg" alt="" loading="lazy"><figcaption>Majáles zabitý</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 07 KNIHA NÁVŠTĚV ========== -->
+<section class="sec" id="vzkaz" style="padding-top:0">
+  <div class="wrap">
+    <header class="sh rv">
+      <span class="no">07</span>
+      <div class="kick">jen pro mě</div>
+      <h2>Kniha <em>návštěv</em></h2>
+    </header>
+    <div class="gb">
+      <form class="card f rv" id="gbForm" autocomplete="off">
+        <input type="hidden" name="_subject" value="Nový vzkaz v knize návštěv ♥">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <p class="hint">Napiš mi, co si myslíš o webu, nebo jen něco hezkého. Vzkaz mi přijde rovnou na e-mail ♥</p>
+        <div class="row2">
+          <label>Podpis<input name="jmeno" required maxlength="40" placeholder="Kdo píše?"></label>
+          <label>Nálada
+            <select name="nalada"><option>♥ zamilovaná</option><option>😊 šťastná</option><option>🥹 dojatá</option><option>😂 pobavená</option><option>😘 plná pusinek</option></select>
+          </label>
+        </div>
+        <label>Vzkaz<textarea name="vzkaz" rows="4" required maxlength="600" placeholder="Sem napiš svůj vzkaz…"></textarea></label>
+        <button class="btn">Zapsat do knihy ♥</button>
+        <p class="status" id="gbStatus" role="status"></p>
+      </form>
+      <div class="notes rv" id="gbList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 08 DATE ========== -->
+<section class="sec" id="date" style="padding-top:0">
+  <div class="wrap">
+    <header class="sh rv">
+      <span class="no">08</span>
+      <div class="kick">jedna pozvánka</div>
+      <h2>Domluvit <em>date</em></h2>
+    </header>
+    <div class="invite rv">
+      <div class="l">
+        <div><div class="hand">Pozvánka</div><h3>Ty, já a jeden společný večer</h3></div>
+        <p>Vyber den, čas a místo. O zbytek se postarám ♥</p>
+        <div class="big">💌</div>
+      </div>
+      <div class="r">
+        <form class="f" id="dateForm" autocomplete="off">
+          <input type="hidden" name="_subject" value="Nová pozvánka na date ♥">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+          <div class="row2">
+            <label>Jméno<input name="jmeno" required placeholder="Jak ti říkat?"></label>
+            <label>Telefon / e-mail<input name="kontakt" required placeholder="Kde tě zastihnu?"></label>
+          </div>
+          <div class="row2">
+            <label>Datum<input type="date" name="datum" required></label>
+            <label>Čas<input type="time" name="cas" required value="18:00"></label>
+          </div>
+          <label>Kam půjdeme?
+            <select name="misto"><option>Kavárna ☕</option><option>Kino 🎬</option><option>Procházka 🌳</option><option>Večeře 🍝</option><option>Nákupy 🛍️</option><option>Překvapení 🎁</option></select>
+          </label>
+          <label>Vzkaz<textarea name="vzkaz" rows="3" placeholder="Cokoliv, co mi chceš říct…"></textarea></label>
+          <button class="btn light">Odeslat pozvánku ♥</button>
+          <p class="status" id="formStatus" role="status"></p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== DOPIS ========== -->
+<section class="sec" style="padding-top:0">
   <div class="wrap rv">
-    <h2>Jsme spolu</h2>
-    <p class="hint">Od 5. června 2026 a každý den se naše láska jen zvětšuje</p>
-    <div class="boxes" id="boxes">
-      <div class="box"><b id="c-d">–</b><small>dní</small></div>
-      <div class="box"><b id="c-h">–</b><small>hodin</small></div>
-      <div class="box"><b id="c-m">–</b><small>minut</small></div>
-      <div class="box"><b id="c-s">–</b><small>sekund</small></div>
-    </div>
-    <div class="anniv"><div class="pill" id="anniv"></div><div class="pill" id="weeks"></div></div>
-  </div>
-</section>
-
-<section class="story" id="pribeh">
-  <div class="wrap">
-    <div class="title rv">
-      <div class="script">kapitoly</div>
-      <h2>Náš příběh</h2>
-      <div class="line"></div>
-    </div>
-
-    <div class="chapter rv">
-      <div class="pic"><img src="img/9.jpg" alt="Objetí v obýváku" loading="lazy"></div>
-      <div class="txt">
-        <div class="no">I.</div>
-        <h3>Objetí, které zahřeje</h3>
-        <p>Upřímně nevím, co k tomu dodat. Naše objetí je místo, kde se cítíme v bezpečí a milovaní.</p>
-        <span class="script">„Domov je tam, kde jsi ty"</span>
-      </div>
-    </div>
-
-    <div class="chapter rv">
-      <div class="pic"><img src="img/2.jpg" alt="Společné zrcadlové selfie" loading="lazy"></div>
-      <div class="txt">
-        <div class="no">II.</div>
-        <h3>Naše selfie</h3>
-        <p>Naše fotečky jsou prostě komické: já, který se na každé fotce tvářím jako kakabus, a ty, která se snažíš, aby fotky byly výjimečné.</p>
-        <span class="script">„My dva a vzpomínky do konce života"</span>
-      </div>
-    </div>
-
-    <div class="chapter rv">
-      <div class="pic"><img src="img/8.jpg" alt="Stejné svetry v převlékárně" loading="lazy"></div>
-      <div class="txt">
-        <div class="no">III.</div>
-        <h3>Jiné outfity, ale ladí</h3>
-        <p>Upřímně se mi hrozně líbí, že ať se oblékneme jakkoli, spolu vždycky vypadáme nádherně a hrozně nám to spolu sluší.</p>
-        <span class="script">„ladíme i bez domluvy"</span>
-      </div>
-    </div>
-
-    <div class="chapter rv">
-      <div class="pic"><img src="img/4.jpg" alt="Pusa na tvář" loading="lazy"></div>
-      <div class="txt">
-        <div class="no">IV.</div>
-        <h3>Pusinka na dobrou noc</h3>
-        <p>V růžovém světle, v tichu, jen ty a já. Naše večery jsou výjimečné, i když někdy nejdou úplně podle plánu. Vždycky ale usínáme v objetí a s pocitem lásky.</p>
-        <span class="script">„dobrou noc, lásko"</span>
-      </div>
-    </div>
-
-    <div class="chapter rv">
-      <div class="pic"><img src="img/14.jpg" alt="Pusinka na gauči" loading="lazy"></div>
-      <div class="txt">
-        <div class="no">V.</div>
-        <h3>Lazy days</h3>
-        <p>Postel, mikina, objetí jsou pro mě ty nejbližší a nejhezčí chvilky. I když jsme na jednu stranu zranitelní, na druhou jsme spolu tak „v pohodě", že nám to vůbec nevadí.</p>
-        <span class="script">„Ještě chvilku, prosím"</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="gallery" id="galerie">
-  <div class="wrap">
-    <div class="title rv">
-      <div class="script">momentky</div>
-      <h2>Naše výstava unikátů</h2>
-      <div class="line"></div>
-    </div>
-    <div class="masonry rv" id="gal">
-      <figure><img src="img/6.jpg" alt="" loading="lazy"><figcaption>Dvojka ve svetrech</figcaption></figure>
-      <figure><img src="img/12.jpg" alt="" loading="lazy"><figcaption>Klasicky v TJ</figcaption></figure>
-      <figure><img src="img/5.jpg" alt="" loading="lazy"><figcaption>Nádherný úsměv od ucha k uchu</figcaption></figure>
-      <figure><img src="img/7.jpg" alt="" loading="lazy"><figcaption>To je jasné, že se tam musíme vyfotit</figcaption></figure>
-      <figure><img src="img/13.jpg" alt="" loading="lazy"><figcaption>To jen ten gauč a lazy days</figcaption></figure>
-      <figure><img src="img/10.jpg" alt="" loading="lazy"><figcaption>Rozmazaní, ale šťastní</figcaption></figure>
-      <figure><img src="img/1.jpg" alt="" loading="lazy"><figcaption>No jo, to bylo vysloveně bahno</figcaption></figure>
-      <figure><img src="img/9.jpg" alt="" loading="lazy"><figcaption>Ten foťáček má něco do sebe</figcaption></figure>
-      <figure><img src="img/17.jpg" alt="" loading="lazy"><figcaption>Pusinkaaaaaaa</figcaption></figure>
-      <figure><img src="img/19.jpg" alt="" loading="lazy"><figcaption>Crazy duo</figcaption></figure>
-      <figure><img src="img/22.jpg" alt="" loading="lazy"><figcaption>Neměli jsme si kam sednout</figcaption></figure>
-      <figure><img src="img/26.jpg" alt="" loading="lazy"><figcaption>Pevně v náručí</figcaption></figure>
-      <figure><img src="img/28.jpg" alt="" loading="lazy"><figcaption>Čistá láska</figcaption></figure>
-      <figure><img src="img/29.jpg" alt="" loading="lazy"><figcaption>Ještěd</figcaption></figure>
-      <figure><img src="img/30.jpg" alt="" loading="lazy"><figcaption>Pejsek nevypadá moc šťastně</figcaption></figure>
-      <figure><img src="img/31.jpg" alt="" loading="lazy"><figcaption>Jazyky ven</figcaption></figure>
-      <figure><img src="img/33.jpg" alt="" loading="lazy"><figcaption>Majáles zabitý</figcaption></figure>
-    </div>
-  </div>
-</section>
-
-<section class="osa" id="osa">
-  <div class="wrap">
-    <div class="title rv">
-      <div class="script">krok za krokem</div>
-      <h2>Naše časová osa</h2>
-      <div class="line"></div>
-    </div>
-    <!-- Každá položka = jeden blok .tl-item (foto, datum, nadpis, text). -->
-    <div class="tl rv">
-      <div class="tl-item"><div class="tl-card"><img src="img/18.jpg" alt="" loading="lazy"><time>11. dubna</time><h3>První přespávačka</h3><p>Byli jsme v Café baru a tvoji rodiče nebyli doma, tak jsem u tebe přespal. Dával jsem ti masáž a bylo nám spolu moc dobře. Domů se mi vůbec nechtělo.</p></div></div>
-      <div class="tl-item"><div class="tl-card"><img src="img/32.jpg" alt="" loading="lazy"><time>30. dubna</time><h3>Majáles v Praze</h3><p>Náš výlet do Prahy na Majáles a procházky po Praze. Hudba, dobré počasí a společně strávený čas, na který nikdy nezapomeneme.</p></div></div>
-      <div class="tl-item"><div class="tl-card"><img src="img/24.jpg" alt="" loading="lazy"><time>29. května</time><h3>Za tebou na Lemberk</h3><p>Když jsi měla praxi, jezdil jsem za tebou na Lemberk. I když to bylo jen na chvilku a cesta byla dlouhá, vyplatilo se to, protože vzpomínky na trojmezí, kino a přespávačku jen tak nezapomeneme.</p></div></div>
-      <div class="tl-item"><div class="tl-card"><img src="img/25.jpg" alt="" loading="lazy"><time>5. června</time><h3>Chodíš semnou?</h3><p>Než jsem odletěl na Maltu, zeptal jsem se tě, jestli se mnou budeš chodit. Na štěstí jsi řekla ano a od té doby žijeme náš krásný příběh.</p></div></div>
-      <div class="tl-item"><div class="tl-card"><img src="img/20.jpg" alt="" loading="lazy"><time>6 týdnů na Maltě</time><h3>Nejtěžší období</h3><p>Šest týdnů daleko od sebe. Volali jsme si skoro každý den a právě tehdy jsem poznal, jak moc mi chybíš.</p></div></div>
-      <div class="tl-item"><div class="tl-card"><img src="img/15.jpg" alt="" loading="lazy"><time>19. července</time><h3>Východ slunce na Sněžce</h3><p>Jeli jsme spolu do Janských Lázní a vyšlapali jsme si východ slunce na Sněžku. Nejhezčí ráno.</p></div></div>
-      <div class="tl-item"><div class="tl-card"><img src="img/23.jpg" alt="" loading="lazy"><time>Od té doby až do stáří</time><h3>Miluju tě nejvíc na světě</h3><p>Chci s tebou strávit zbytek života a plnit si hlavu vzpomínkami na nás dva, protože mě děláš nejšťastnějším klukem na světě ♥</p></div></div>
-    </div>
-  </div>
-</section>
-
-<section class="date" id="date">
-  <div class="wrap">
-    <div class="title rv">
-      <div class="script">jedna pozvánka</div>
-      <h2>Domluvit date</h2>
-      <div class="line"></div>
-    </div>
-    <form class="dform rv" id="dateForm">
-      <input type="hidden" name="_subject" value="Nová pozvánka na date ♥">
-      <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
-      <div class="row">
-        <label>Jméno<input name="jmeno" required placeholder="Jak ti říkat?"></label>
-        <label>Telefon / e-mail<input name="kontakt" required placeholder="Kde tě zastihnu?"></label>
-      </div>
-      <div class="row">
-        <label>Datum<input type="date" name="datum" required></label>
-        <label>Čas<input type="time" name="cas" required value="18:00"></label>
-      </div>
-      <label>Kam půjdeme?
-        <select name="misto">
-          <option>Kavárna ☕</option><option>Kino 🎬</option><option>Procházka 🌳</option>
-          <option>Večeře 🍝</option><option>Nákupy 🛍️</option><option>Překvapení 🎁</option>
-        </select>
-      </label>
-      <label>Vzkaz<textarea name="vzkaz" rows="4" placeholder="Cokoliv, co mi chceš říct…"></textarea></label>
-      <button type="submit">Odeslat pozvánku ♥</button>
-      <p class="status" id="formStatus" role="status"></p>
-    </form>
-  </div>
-</section>
-
-<section class="vzkaz" id="vzkaz">
-  <div class="wrap">
-    <div class="title rv">
-      <div class="script">jen pro mě</div>
-      <h2>Kniha návštěv</h2>
-      <div class="line"></div>
-    </div>
-    <form class="dform rv" id="gbForm">
-      <input type="hidden" name="_subject" value="Nový vzkaz v knize návštěv ♥">
-      <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
-      <p class="gbhint">Napiš mi, co si myslíš o webu, nebo jen něco hezkého. Vzkaz mi přijde rovnou na e-mail ♥</p>
-      <label>Podpis<input name="jmeno" required placeholder="Kdo píše?"></label>
-      <label>Nálada
-        <select name="nalada"><option>♥ zamilovaná</option><option>😊 šťastná</option><option>🥹 dojatá</option><option>😂 pobavená</option><option>😘 plná pusinek</option></select>
-      </label>
-      <label>Vzkaz<textarea name="vzkaz" rows="4" required placeholder="Sem napiš svůj vzkaz…"></textarea></label>
-      <button type="submit">Zapsat do knihy ♥</button>
-      <p class="status" id="gbStatus" role="status"></p>
-    </form>
-    <div class="gblist" id="gbList"></div>
-  </div>
-</section>
-
-<section class="letter">
-  <div class="wrap rv">
-    <div class="paper">
+    <div class="letter-paper">
+      <div class="stampbox">♥</div>
       <h2>Milá lásko,</h2>
       <p>Tenhle web má sloužit jako vzpomínka na to, co jsme spolu už zažili.</p>
       <p>Děláš každý den výjimečný. Nevím, co nám ještě život přinese, ale věřím, že spolu zvládneme všechno.</p>
@@ -487,15 +646,16 @@
   </div>
 </section>
 
-<section class="surprise">
+<!-- ========== PŘEKVAPENÍ ========== -->
+<section class="sec surprise" style="padding-top:0">
   <div class="wrap rv">
-    <h2>Abych ještě nezapomněl…</h2>
+    <h2>Abych ještě <em>nezapomněl…</em></h2>
     <p>Mám pro tebe malé překvapení.</p>
-    <button id="surpriseBtn">Otevři mě ♥</button>
+    <button class="gift" id="surpriseBtn">Otevři mě ♥</button>
   </div>
 </section>
 <div class="modal" id="modal">
-  <div class="card">
+  <div class="mc">
     <button class="close" aria-label="Zavřít">×</button>
     <h3>Miluju tě ♥</h3>
     <p>Jsi to nejlepší, co mě v životě mohlo potkat.</p>
@@ -511,200 +671,294 @@
   <img id="lbimg" alt="">
   <button class="n" aria-label="Další">›</button>
 </div>
+<div class="toast" id="toast" role="status"></div>
 
 <script>
-/* plovoucí srdíčka */
+/* ===== pomocné ===== */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const pISO=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const todayISO=()=>iso(new Date());
+const plural=(n,a,b,c)=>n==1?a:(n>1&&n<5?b:c);
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+let toastT;function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),2400)}
+
+/* ===== úložiště (kalendář, plány, kniha návštěv) ===== */
+const SKEY='jmd-data-v1';
+const SEED={
+  events:[
+    {id:'e1',date:'2026-04-11',icon:'♥',title:'První přespávačka',note:'Café bar a pak přespávačka u tebe.'},
+    {id:'e2',date:'2026-04-30',icon:'🎵',title:'Majáles v Praze',note:''},
+    {id:'e3',date:'2026-05-29',icon:'🎬',title:'Lemberk a trojmezí',note:'Kino a přespávačka.'},
+    {id:'e4',date:'2026-06-05',icon:'💋',title:'Začali jsme spolu chodit',note:'Den, kdy jsi řekla ano ♥'},
+    {id:'e5',date:'2026-07-19',icon:'🏔️',title:'Východ slunce na Sněžce',note:'Janské Lázně'},
+    {id:'e6',date:'2027-06-05',icon:'🎉',title:'Naše 1. výročí',note:''}
+  ],
+  plans:[
+    {id:'p1',icon:'🏔️',text:'Vyšlapat si východ slunce na Sněžku',done:true,doneAt:new Date(2026,6,19).getTime()},
+    {id:'p2',icon:'🏖️',text:'Společná dovolená u moře',done:false},
+    {id:'p3',icon:'🎵',text:'Jít spolu na koncert',done:false},
+    {id:'p4',icon:'🍝',text:'Uvařit spolu romantickou večeři',done:false}
+  ],
+  gb:[]
+};
+let DB=null;
+try{DB=JSON.parse(localStorage.getItem(SKEY))}catch(e){}
+if(!DB||!Array.isArray(DB.events))DB=JSON.parse(JSON.stringify(SEED));
+DB.gb=DB.gb||[];
+try{const old=JSON.parse(localStorage.getItem('gbSent')||'[]');if(old.length&&!DB.gb.length)DB.gb=old.map((m,i)=>({id:'g'+i,...m}));}catch(e){}
+function save(){try{localStorage.setItem(SKEY,JSON.stringify(DB));return true}catch(e){toast('Prohlížeč nedovolil uložit ☹');return false}}
+
+/* ===== heslo, intro, hudba ===== */
 (()=>{
-  const c=document.getElementById('hearts'),x=c.getContext('2d');
-  let W,H,hs=[];
-  const rs=()=>{W=c.width=innerWidth;H=c.height=innerHeight};rs();addEventListener('resize',rs);
-  const mk=(init)=>({x:Math.random()*W,y:init?Math.random()*H:H+30,s:6+Math.random()*14,v:.3+Math.random()*.7,
-    a:.15+Math.random()*.4,p:Math.random()*6.28,w:.5+Math.random()});
-  for(let i=0;i<28;i++)hs.push(mk(true));
-  const heart=(px,py,s)=>{x.beginPath();x.moveTo(px,py+s/4);
-    x.bezierCurveTo(px,py,px-s/2,py,px-s/2,py+s/4);
-    x.bezierCurveTo(px-s/2,py+s/2,px,py+s*.7,px,py+s*.9);
-    x.bezierCurveTo(px,py+s*.7,px+s/2,py+s/2,px+s/2,py+s/4);
-    x.bezierCurveTo(px+s/2,py,px,py,px,py+s/4);x.fill()};
-  (function f(){
-    x.clearRect(0,0,W,H);
-    hs.forEach((h,i)=>{
-      h.y-=h.v;h.p+=.02;
-      x.fillStyle=`rgba(255,${90+h.s*4|0},${130+h.s*3|0},${h.a})`;
-      heart(h.x+Math.sin(h.p)*18*h.w,h.y,h.s);
-      if(h.y<-30)hs[i]=mk(false);
-    });
-    requestAnimationFrame(f);
-  })();
+  const HASH='ccc0623490c56e18990f149671a3405e35509c8e709c55e7bd98916dd775f2cd';
+  const VIDEO='ByqbfoI13Sc';          // OG PAV – Zkuře
+  const gate=$('#gate'),intro=$('#intro'),form=$('#gateForm'),pw=$('#pw'),err=$('#gateErr'),mbtn=$('#music');
+  let player=null,ready=false,want=false;
+  async function sha(t){
+    if(!crypto.subtle)return t;
+    const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));
+    return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+  }
+  const setBtn=on=>mbtn.classList.toggle('on',on);
+  window.onYouTubeIframeAPIReady=()=>{
+    player=new YT.Player('yt',{height:'1',width:'1',videoId:VIDEO,
+      playerVars:{autoplay:0,loop:1,playlist:VIDEO,controls:0,playsinline:1},
+      events:{onReady:()=>{ready=true;player.setVolume(60);if(want)player.playVideo()},onStateChange:e=>setBtn(e.data===1)}});
+  };
+  const loadMusic=()=>{const t=document.createElement('script');t.src='https://www.youtube.com/iframe_api';document.head.appendChild(t)};
+  mbtn.addEventListener('click',()=>{if(!ready)return;if(player.getPlayerState()===1){player.pauseVideo();setBtn(false)}else player.playVideo()});
+  function startIntro(){
+    gate.classList.add('hide');intro.classList.remove('hide');
+    const ps=[...intro.querySelectorAll('.lines p')];
+    ps.forEach((p,i)=>setTimeout(()=>p.classList.add('on'),600+i*1900));
+    setTimeout(()=>{intro.classList.add('hide');document.body.classList.remove('locked');window.dispatchEvent(new Event('unlocked'))},600+ps.length*1900+1800);
+  }
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    if(await sha(pw.value.trim())===HASH){want=true;loadMusic();startIntro()}
+    else{err.textContent='Špatné heslo, zkus to znovu ♥';gate.classList.remove('shake');void gate.offsetWidth;gate.classList.add('shake');pw.select()}
+  });
+  pw.focus();
 })();
 
-/* počítadlo – spolu od 5. 6. 2026 */
+/* ===== počítadlo – spolu od 5. 6. 2026 ===== */
 (()=>{
   const t=new Date(2026,5,5);
   const set=(id,v)=>document.getElementById(id).textContent=v;
-  const ord=n=>n+'. výročí';
   function tick(){
     const now=new Date(),s=Math.max(0,Math.floor((now-t)/1000));
-    set('c-d',Math.floor(s/86400));set('c-h',Math.floor(s%86400/3600));
-    set('c-m',Math.floor(s%3600/60));set('c-s',s%60);
-    const k=Math.max(0,now.getFullYear()-2026-((now.getMonth()<5||(now.getMonth()==5&&now.getDate()<5))?1:0));
-    let nx=new Date(2026+k+1,5,5);
-    const left=Math.ceil((nx-now)/86400000);
-    const lw=document.getElementById('anniv'),ww=document.getElementById('weeks');
-    lw.innerHTML=left<=0?'Dnes máme <b>výročí</b> ♥':'Do <b>'+ord(k+1)+'</b> zbývá <b>'+left+'</b> '+(left==1?'den':left<5?'dny':'dní');
+    set('c-d',Math.floor(s/86400));set('c-h',Math.floor(s%86400/3600));set('c-m',Math.floor(s%3600/60));set('c-s',s%60);
+    const before=now.getMonth()<5||(now.getMonth()==5&&now.getDate()<5);
+    const k=Math.max(0,now.getFullYear()-2026-(before?1:0));
+    const isToday=now.getMonth()==5&&now.getDate()==5&&now.getFullYear()>2026;
+    const nx=new Date(2026+k+1,5,5),left=Math.ceil((nx-now)/86400000);
+    $('#anniv').innerHTML=isToday?'Dnes máme <b>výročí</b> ♥':'Do <b>'+(k+1)+'. výročí</b> zbývá <b>'+left+'</b> '+plural(left,'den','dny','dní');
     const w=Math.floor((now-t)/604800000);
-    ww.innerHTML='Už jsme spolu <b>'+w+'</b> '+(w==1?'týden':w<5&&w>0?'týdny':'týdnů');
+    $('#weeks').innerHTML='Už jsme spolu <b>'+w+'</b> '+plural(w,'týden','týdny','týdnů');
   }
   tick();setInterval(tick,1000);
 })();
 
-/* formulář – Domluvit date */
+/* ===== kalendář ===== */
 (()=>{
-  const f=document.getElementById('dateForm'),st=document.getElementById('formStatus');
-  if(!f)return;
-  const d=f.querySelector('[name=datum]');
-  d.min=new Date().toISOString().slice(0,10);
+  const MF=new Intl.DateTimeFormat('cs-CZ',{month:'long',year:'numeric'});
+  const DL=new Intl.DateTimeFormat('cs-CZ',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const DS=new Intl.DateTimeFormat('cs-CZ',{day:'numeric',month:'long',year:'numeric'});
+  const now=new Date();let view=new Date(now.getFullYear(),now.getMonth(),1),sel=todayISO(),editId=null;
+  const form=$('#evForm'),submit=$('#evSubmit'),cancel=$('#evCancel');
+  const list=()=>DB.events.slice().sort((a,b)=>a.date.localeCompare(b.date));
+  function when(e){
+    const t=todayISO();if(e.date===t)return ' · <span class="soon">dnes</span>';
+    if(e.date<t)return '';
+    const n=Math.round((pISO(e.date)-pISO(t))/86400000);
+    return ' · <span class="soon">za '+n+' '+plural(n,'den','dny','dní')+'</span>';
+  }
+  function row(e,withDate){
+    const past=e.date<todayISO();
+    return '<div class="ev '+(past?'past':'fut')+'" data-id="'+e.id+'"><span class="em">'+esc(e.icon||'♥')+'</span><div class="evb"><b>'+esc(e.title)+'</b>'+
+      (withDate?'<small>'+DS.format(pISO(e.date))+when(e)+'</small>':'')+(e.note?'<p>'+esc(e.note)+'</p>':'')+
+      '</div><div class="eva"><button type="button" data-act="edit" aria-label="Upravit">✎</button><button type="button" data-act="del" aria-label="Smazat">×</button></div></div>';
+  }
+  function render(){
+    $('#calTitle').textContent=MF.format(view);
+    const first=new Date(view.getFullYear(),view.getMonth(),1),off=(first.getDay()+6)%7;
+    const dim=new Date(view.getFullYear(),view.getMonth()+1,0).getDate(),cells=Math.ceil((off+dim)/7)*7;
+    const by={};list().forEach(e=>(by[e.date]=by[e.date]||[]).push(e));
+    const t=todayISO();let h='';
+    for(let i=0;i<cells;i++){
+      const d=new Date(view.getFullYear(),view.getMonth(),1-off+i),k=iso(d),l=by[k]||[];
+      const c=['day'];if(d.getMonth()!==view.getMonth())c.push('out');if(k===t)c.push('today');if(k===sel)c.push('sel');
+      h+='<button type="button" class="'+c.join(' ')+'" data-d="'+k+'" aria-label="'+DL.format(d)+(l.length?', '+l.length+' '+plural(l.length,'záznam','záznamy','záznamů'):'')+'"><span>'+d.getDate()+'</span><span class="dots">'+
+        l.slice(0,3).map(e=>'<i class="'+(e.date<t?'p':'f')+'"></i>').join('')+'</span></button>';
+    }
+    $('#calDays').innerHTML=h;
+    $('#selTitle').textContent=DL.format(pISO(sel));
+    const dl=by[sel]||[];
+    $('#dayList').innerHTML=dl.length?dl.map(e=>row(e,false)).join(''):'<p class="empty">Tenhle den je zatím prázdný. Přidej vzpomínku nebo plán ↓</p>';
+    if(!editId)form.date.value=sel;
+    const fut=list().filter(e=>e.date>=t).slice(0,6),past=list().filter(e=>e.date<t).reverse();
+    $('#upList').innerHTML=fut.length?fut.map(e=>row(e,true)).join(''):'<p class="empty">Zatím nic naplánovaného.</p>';
+    $('#pastList').innerHTML=past.length?past.map(e=>row(e,true)).join(''):'<p class="empty">Zatím žádné vzpomínky.</p>';
+  }
+  function go(date){sel=date;const d=pISO(date);view=new Date(d.getFullYear(),d.getMonth(),1);render()}
+  function resetForm(){editId=null;form.reset();form.date.value=sel;submit.textContent='Přidat do kalendáře';cancel.hidden=true}
+  $('#calDays').addEventListener('click',e=>{const b=e.target.closest('.day');if(!b)return;sel=b.dataset.d;if(b.classList.contains('out'))go(sel);else render();if(!editId)form.date.value=sel});
+  $('#calPrev').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()-1,1);render()};
+  $('#calNext').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()+1,1);render()};
+  $('#calToday').onclick=()=>go(todayISO());
+  $('#kalendar').addEventListener('click',e=>{
+    const ev=e.target.closest('.ev');if(!ev)return;
+    const item=DB.events.find(x=>x.id===ev.dataset.id);if(!item)return;
+    const act=e.target.closest('button')?.dataset.act;
+    if(act==='del'){
+      if(!confirm('Smazat „'+item.title+'"?'))return;
+      DB.events=DB.events.filter(x=>x.id!==item.id);save();if(editId===item.id)resetForm();render();toast('Smazáno');
+    }else if(act==='edit'){
+      editId=item.id;form.date.value=item.date;form.icon.value=item.icon||'♥';form.title.value=item.title;form.note.value=item.note||'';
+      submit.textContent='Uložit změny';cancel.hidden=false;go(item.date);form.title.focus();
+    }else go(item.date);
+  });
+  cancel.onclick=resetForm;
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const v={date:form.date.value,icon:form.icon.value,title:form.title.value.trim(),note:form.note.value.trim()};
+    if(!v.date||!v.title)return;
+    if(editId){Object.assign(DB.events.find(x=>x.id===editId)||{},v)}else DB.events.push({id:uid('e'),...v});
+    const was=!!editId;save();resetForm();go(v.date);toast(was?'Uloženo ✎':'Přidáno do kalendáře ♥');
+  });
+  render();
+  setInterval(()=>{if(todayISO()!==render._t){render._t=todayISO();render()}},60000);
+})();
+
+/* ===== společné plány ===== */
+(()=>{
+  const DS=new Intl.DateTimeFormat('cs-CZ',{day:'numeric',month:'long',year:'numeric'});
+  let filter='all';
+  function render(){
+    const all=DB.plans,done=all.filter(p=>p.done).length,tot=all.length,pct=tot?Math.round(done/tot*100):0;
+    $('#progLabel').textContent='Splněno '+done+' z '+tot;
+    $('#progPct').textContent=pct+' %';
+    $('#progBar').style.width=pct+'%';
+    let items=all.slice().sort((a,b)=>(a.done-b.done)||(a.done?(b.doneAt||0)-(a.doneAt||0):0));
+    if(filter==='todo')items=items.filter(p=>!p.done);if(filter==='done')items=items.filter(p=>p.done);
+    $('#planList').innerHTML=items.length?items.map(p=>'<li class="plan'+(p.done?' done':'')+'" data-id="'+p.id+'"><button type="button" class="chk" role="checkbox" aria-checked="'+p.done+'" aria-label="Splněno"></button><div class="pb"><span class="pt">'+esc(p.icon||'♥')+' '+esc(p.text)+'</span>'+
+      (p.done&&p.doneAt?'<small>splněno '+DS.format(new Date(p.doneAt))+'</small>':'')+'</div><button type="button" class="pdel" aria-label="Smazat">×</button></li>').join('')
+      :'<li class="empty" style="list-style:none;text-align:center;padding:14px">'+(filter==='done'?'Zatím nic splněného – tak hurá do toho!':'Všechno splněno! Přidejte si další plán ♥')+'</li>';
+  }
+  $('#planForm').addEventListener('submit',e=>{
+    e.preventDefault();const f=e.target,text=f.text.value.trim();if(!text)return;
+    DB.plans.push({id:uid('p'),icon:f.icon.value,text,done:false});save();f.text.value='';if(filter==='done'){filter='all';setChip()}render();toast('Plán přidán ✨');
+  });
+  $('#planList').addEventListener('click',e=>{
+    const li=e.target.closest('.plan');if(!li)return;const p=DB.plans.find(x=>x.id===li.dataset.id);if(!p)return;
+    if(e.target.closest('.pdel')){if(!confirm('Smazat plán „'+p.text+'"?'))return;DB.plans=DB.plans.filter(x=>x!==p);save();render();return}
+    if(e.target.closest('.chk')||e.target.closest('.pb')){
+      p.done=!p.done;p.doneAt=p.done?Date.now():null;save();
+      if(p.done){const r=li.querySelector('.chk').getBoundingClientRect();window.burst&&window.burst(r.left+r.width/2,r.top+r.height/2,60);toast('Splněno! ♥')}
+      render();
+    }
+  });
+  function setChip(){$$('#planChips .chip').forEach(c=>c.classList.toggle('on',c.dataset.f===filter))}
+  $('#planChips').addEventListener('click',e=>{const c=e.target.closest('.chip');if(!c)return;filter=c.dataset.f;setChip();render()});
+  render();
+})();
+
+/* ===== kniha návštěv ===== */
+(()=>{
+  const f=$('#gbForm'),st=$('#gbStatus'),list=$('#gbList');
+  function draw(){
+    list.innerHTML=DB.gb.length?DB.gb.map(m=>'<div class="note"><p>'+esc(m.vzkaz)+'</p><small>'+esc(m.nalada)+' · '+esc(m.jmeno)+' · '+esc(m.datum)+'</small></div>').join('')
+      :'<div class="note"><p>Tady se objeví tvoje vzkazy ♥</p><small>zatím prázdno</small></div>';
+  }
+  draw();
+  f.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const btn=f.querySelector('button');btn.disabled=true;btn.textContent='Zapisuju…';st.className='status';st.textContent='';
+    const d=Object.fromEntries(new FormData(f));
+    DB.gb.unshift({id:uid('g'),jmeno:d.jmeno,nalada:d.nalada,vzkaz:d.vzkaz,datum:new Date().toLocaleDateString('cs-CZ')});save();draw();
+    try{
+      const r=await fetch('https://formsubmit.co/ajax/3c969fd54016dfe3f37e240bab0e0558',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(d)});
+      const j=await r.json();if(!r.ok||j.success==='false')throw 0;
+      f.reset();st.className='status ok';st.textContent='Zapsáno a odesláno! Děkuju za vzkaz ♥';
+    }catch(err){st.className='status err';st.textContent='Vzkaz je zapsaný tady, ale e-mail se nepodařilo odeslat.'}
+    btn.disabled=false;btn.textContent='Zapsat do knihy ♥';
+  });
+})();
+
+/* ===== formulář – Domluvit date ===== */
+(()=>{
+  const f=$('#dateForm'),st=$('#formStatus');
+  f.querySelector('[name=datum]').min=todayISO();
   f.addEventListener('submit',async e=>{
     e.preventDefault();
     const btn=f.querySelector('button');btn.disabled=true;btn.textContent='Odesílám…';st.className='status';st.textContent='';
     try{
-      const r=await fetch('https://formsubmit.co/ajax/3c969fd54016dfe3f37e240bab0e0558',{
-        method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
-        body:JSON.stringify(Object.fromEntries(new FormData(f)))
-      });
-      const j=await r.json();
-      if(!r.ok||j.success==='false')throw new Error();
+      const r=await fetch('https://formsubmit.co/ajax/3c969fd54016dfe3f37e240bab0e0558',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(f)))});
+      const j=await r.json();if(!r.ok||j.success==='false')throw 0;
       f.reset();st.className='status ok';st.textContent='Odesláno! Ozvu se ti co nejdřív ♥';
     }catch(err){st.className='status err';st.innerHTML='Něco se nepovedlo. Zkus to znovu, nebo napiš přímo <a style="color:inherit" href="mailto:adamekhanousek1234@gmail.com?subject=Pozv%C3%A1nka%20na%20date">e-mailem</a>.'}
     btn.disabled=false;btn.textContent='Odeslat pozvánku ♥';
   });
 })();
 
-
-/* ===== heslo, intro, hudba ===== */
+/* ===== plovoucí srdíčka ===== */
 (()=>{
-  const HASH='ccc0623490c56e18990f149671a3405e35509c8e709c55e7bd98916dd775f2cd';
-  const VIDEO='ByqbfoI13Sc';          // OG PAV – Zkuře
-  const gate=document.getElementById('gate'),intro=document.getElementById('intro'),
-        form=document.getElementById('gateForm'),pw=document.getElementById('pw'),err=document.getElementById('gateErr'),
-        mbtn=document.getElementById('music');
-  let player=null,ready=false,want=false;
-
-  async function sha(t){
-    if(!crypto.subtle)return t;
-    const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));
-    return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
-  }
-  function setBtn(on){mbtn.classList.toggle('on',on);mbtn.classList.toggle('off',!on)}
-
-  window.onYouTubeIframeAPIReady=()=>{
-    player=new YT.Player('yt',{height:'1',width:'1',videoId:VIDEO,
-      playerVars:{autoplay:0,loop:1,playlist:VIDEO,controls:0,playsinline:1},
-      events:{onReady:()=>{ready=true;player.setVolume(60);if(want)player.playVideo()},
-               onStateChange:e=>setBtn(e.data===1)}});
-  };
-  function loadMusic(){
-    const t=document.createElement('script');t.src='https://www.youtube.com/iframe_api';document.head.appendChild(t);
-  }
-  mbtn.addEventListener('click',()=>{
-    if(!ready)return;
-    if(player.getPlayerState()===1){player.pauseVideo();setBtn(false)}else{player.playVideo()}
-  });
-
-  function startIntro(){
-    gate.classList.add('hide');
-    intro.classList.remove('hide');
-    const ps=[...intro.querySelectorAll('.lines p')];
-    ps.forEach((p,i)=>setTimeout(()=>p.classList.add('on'),600+i*1800));
-    setTimeout(()=>{intro.classList.add('hide');document.body.classList.remove('locked');mbtn.classList.add('show')},600+ps.length*1800+1600);
-  }
-  function skipIntro(){
-    gate.classList.add('hide');document.body.classList.remove('locked');mbtn.classList.add('show');
-  }
-
-  form.addEventListener('submit',async e=>{
-    e.preventDefault();
-    if(await sha(pw.value.trim())===HASH){
-      try{sessionStorage.setItem('unlocked','1')}catch(_){}
-      want=true;loadMusic();          // klik = povolené přehrávání
-      startIntro();
-    }else{
-      err.textContent='Špatné heslo, zkus to znovu ♥';
-      gate.classList.remove('shake');void gate.offsetWidth;gate.classList.add('shake');pw.select();
-    }
-  });
-  pw.focus();
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const c=$('#hearts'),x=c.getContext('2d');let W,H,hs=[];
+  const rs=()=>{W=c.width=innerWidth;H=c.height=innerHeight};rs();addEventListener('resize',rs);
+  const mk=init=>({x:Math.random()*W,y:init?Math.random()*H:H+30,s:6+Math.random()*12,v:.25+Math.random()*.5,a:.06+Math.random()*.14,p:Math.random()*6.28,w:.5+Math.random()});
+  for(let i=0;i<16;i++)hs.push(mk(true));
+  const heart=(px,py,s)=>{x.beginPath();x.moveTo(px,py+s/4);x.bezierCurveTo(px,py,px-s/2,py,px-s/2,py+s/4);x.bezierCurveTo(px-s/2,py+s/2,px,py+s*.7,px,py+s*.9);
+    x.bezierCurveTo(px,py+s*.7,px+s/2,py+s/2,px+s/2,py+s/4);x.bezierCurveTo(px+s/2,py,px,py,px,py+s/4);x.fill()};
+  (function f(){x.clearRect(0,0,W,H);hs.forEach((h,i)=>{h.y-=h.v;h.p+=.02;x.fillStyle='rgba(125,22,49,'+h.a+')';heart(h.x+Math.sin(h.p)*18*h.w,h.y,h.s);if(h.y<-30)hs[i]=mk(false)});requestAnimationFrame(f)})();
 })();
 
 /* ===== překvapení + konfety ===== */
 (()=>{
-  const btn=document.getElementById('surpriseBtn'),modal=document.getElementById('modal'),
-        c=document.getElementById('confetti'),x=c.getContext('2d');
-  let parts=[],run=false;
-  const cols=['#ff4d79','#ff8fab','#f3c98b','#fff1ec','#ff7a9c'];
+  const c=$('#confetti'),x=c.getContext('2d'),modal=$('#modal');let parts=[],run=false;
+  const cols=['#7d1631','#d4506c','#f3d4d4','#b98a4a','#fffaf3','#e2607b'];
   const rs=()=>{c.width=innerWidth;c.height=innerHeight};rs();addEventListener('resize',rs);
-  function burst(){
-    for(let i=0;i<180;i++)parts.push({x:innerWidth/2,y:innerHeight*.6,vx:(Math.random()-.5)*16,vy:-8-Math.random()*12,
-      g:.28,s:8+Math.random()*14,c:cols[i%cols.length],r:Math.random()*6,vr:(Math.random()-.5)*.3,h:Math.random()<.55});
+  function heart(px,py,s){x.beginPath();x.moveTo(px,py+s/4);x.bezierCurveTo(px,py,px-s/2,py,px-s/2,py+s/4);x.bezierCurveTo(px-s/2,py+s/2,px,py+s*.7,px,py+s*.9);
+    x.bezierCurveTo(px,py+s*.7,px+s/2,py+s/2,px+s/2,py+s/4);x.bezierCurveTo(px+s/2,py,px,py,px,py+s/4);x.fill()}
+  window.burst=(ox,oy,n)=>{
+    ox=ox??innerWidth/2;oy=oy??innerHeight*.6;n=n||180;
+    for(let i=0;i<n;i++)parts.push({x:ox,y:oy,vx:(Math.random()-.5)*(n<100?9:16),vy:-6-Math.random()*(n<100?7:12),g:.28,s:7+Math.random()*13,c:cols[i%cols.length],r:Math.random()*6,vr:(Math.random()-.5)*.3,h:Math.random()<.55});
     if(!run){run=true;loop()}
-  }
-  function heart(px,py,s){x.beginPath();x.moveTo(px,py+s/4);x.bezierCurveTo(px,py,px-s/2,py,px-s/2,py+s/4);
-    x.bezierCurveTo(px-s/2,py+s/2,px,py+s*.7,px,py+s*.9);x.bezierCurveTo(px,py+s*.7,px+s/2,py+s/2,px+s/2,py+s/4);
-    x.bezierCurveTo(px+s/2,py,px,py,px,py+s/4);x.fill()}
+  };
   function loop(){
-    x.clearRect(0,0,c.width,c.height);
-    parts=parts.filter(p=>p.y<c.height+40);
-    parts.forEach(p=>{p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.r+=p.vr;
-      x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;
-      if(p.h)heart(0,0,p.s);else x.fillRect(-p.s/4,-p.s/2,p.s/2,p.s);x.restore()});
+    x.clearRect(0,0,c.width,c.height);parts=parts.filter(p=>p.y<c.height+40);
+    parts.forEach(p=>{p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.r+=p.vr;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;if(p.h)heart(0,0,p.s);else x.fillRect(-p.s/4,-p.s/2,p.s/2,p.s);x.restore()});
     if(parts.length)requestAnimationFrame(loop);else{run=false;x.clearRect(0,0,c.width,c.height)}
   }
-  btn.addEventListener('click',()=>{burst();setTimeout(burst,350);modal.classList.add('open')});
+  $('#surpriseBtn').addEventListener('click',()=>{burst();setTimeout(()=>burst(),350);modal.classList.add('open')});
   modal.addEventListener('click',e=>{if(e.target===modal||e.target.classList.contains('close'))modal.classList.remove('open')});
 })();
 
-/* kniha návštěv */
+/* ===== lightbox ===== */
 (()=>{
-  const f=document.getElementById('gbForm'),st=document.getElementById('gbStatus'),list=document.getElementById('gbList');
-  if(!f)return;
-  const K='gbSent';let L=[];try{L=JSON.parse(localStorage.getItem(K)||'[]')}catch(e){}
-  const esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  function draw(){list.innerHTML=L.map(m=>'<div class="gbitem"><small>'+esc(m.nalada)+' · '+esc(m.jmeno)+' · '+esc(m.datum)+'</small><p>'+esc(m.vzkaz)+'</p></div>').join('')}
-  draw();
-  f.addEventListener('submit',async e=>{
-    e.preventDefault();
-    const btn=f.querySelector('button');btn.disabled=true;btn.textContent='Zapisuju…';st.className='status';st.textContent='';
-    const d=Object.fromEntries(new FormData(f));
-    try{
-      const r=await fetch('https://formsubmit.co/ajax/3c969fd54016dfe3f37e240bab0e0558',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(d)});
-      const j=await r.json();if(!r.ok||j.success==='false')throw 0;
-      L.unshift({jmeno:d.jmeno,nalada:d.nalada,vzkaz:d.vzkaz,datum:new Date().toLocaleDateString('cs-CZ')});
-      try{localStorage.setItem(K,JSON.stringify(L.slice(0,20)))}catch(_){}
-      draw();f.reset();st.className='status ok';st.textContent='Zapsáno! Děkuju za vzkaz ♥';
-    }catch(err){st.className='status err';st.textContent='Něco se nepovedlo, zkus to prosím znovu.'}
-    btn.disabled=false;btn.textContent='Zapsat do knihy ♥';
-  });
-})();
-
-/* reveal on scroll */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
-document.querySelectorAll('.rv').forEach(el=>io.observe(el));
-
-/* lightbox */
-(()=>{
-  const imgs=[...document.querySelectorAll('.pic img,.tl-card img,.masonry img')];
-  const lb=document.getElementById('lb'),im=document.getElementById('lbimg');let i=0;
+  const lb=$('#lb'),im=$('#lbimg');let imgs=[],i=0;
   const show=n=>{i=(n+imgs.length)%imgs.length;im.src=imgs[i].src;lb.classList.add('open')};
-  imgs.forEach((g,n)=>g.addEventListener('click',()=>show(n)));
+  document.addEventListener('click',e=>{const g=e.target.closest('.pol img,.tl-card img');if(!g)return;imgs=$$('.pol img,.tl-card img');show(imgs.indexOf(g))});
   lb.querySelector('.x').onclick=()=>lb.classList.remove('open');
   lb.querySelector('.p').onclick=e=>{e.stopPropagation();show(i-1)};
   lb.querySelector('.n').onclick=e=>{e.stopPropagation();show(i+1)};
   lb.addEventListener('click',e=>{if(e.target===lb)lb.classList.remove('open')});
   addEventListener('keydown',e=>{
+    if(e.key==='Escape'){lb.classList.remove('open');$('#modal').classList.remove('open')}
     if(!lb.classList.contains('open'))return;
-    if(e.key==='Escape')lb.classList.remove('open');
     if(e.key==='ArrowLeft')show(i-1);if(e.key==='ArrowRight')show(i+1);
   });
+})();
+
+/* ===== animace při scrollu + aktivní menu ===== */
+(()=>{
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.1});
+  $$('.rv').forEach(el=>io.observe(el));
+  const links=$$('.nav a[href^="#"]');
+  const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('act',a.getAttribute('href')==='#'+e.target.id&&!a.classList.contains('cta')&&!a.classList.contains('logo')))}),{rootMargin:'-45% 0px -50% 0px'});
+  $$('section[id]').forEach(s=>so.observe(s));
 })();
 </script>
 </body>
