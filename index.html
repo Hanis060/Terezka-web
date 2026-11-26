@@ -308,6 +308,48 @@ footer{position:relative;z-index:1;background:var(--wine-2);color:#fbeee8;text-a
 .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);z-index:500;background:var(--ink);color:#fff;padding:11px 22px;border-radius:999px;font-size:.92rem;opacity:0;transition:.35s;pointer-events:none}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 
+/* ===== MAP ===== */
+.mapbox{display:grid;grid-template-columns:1.7fr 1fr;gap:24px;align-items:start}
+.map-card{padding:14px}
+.map-tools{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.map-tools input{flex:1;min-width:160px;font:inherit;border:1px solid var(--line);border-radius:999px;padding:11px 18px;background:#fff;color:var(--ink)}
+.map-tools input:focus{outline:0;border-color:var(--rose);box-shadow:0 0 0 4px rgba(212,80,108,.14)}
+.map-tools .btn{padding:11px 18px}
+#map{height:540px;border-radius:18px;overflow:hidden;border:1px solid var(--line);isolation:isolate;z-index:0;background:var(--paper-2);cursor:crosshair}
+.leaflet-container{font-family:var(--sans)}
+.pin-wrap{background:none;border:0}
+.pin{width:38px;height:38px;border-radius:50% 50% 50% 0;background:linear-gradient(135deg,#e2607b,var(--wine));transform:rotate(-45deg);display:grid;place-items:center;border:2px solid #fff;box-shadow:0 8px 16px -6px rgba(60,20,30,.7);transition:transform .2s}
+.pin span{transform:rotate(45deg);font-size:16px;line-height:1}
+.pin.new{background:var(--gold)}
+.leaflet-marker-icon:hover .pin{transform:rotate(-45deg) scale(1.12)}
+.love-pop .leaflet-popup-content-wrapper{border-radius:18px;background:var(--card);box-shadow:var(--shadow);border:1px solid var(--line)}
+.love-pop .leaflet-popup-tip{background:var(--card)}
+.love-pop .leaflet-popup-content{margin:16px 18px;font-size:.95rem;line-height:1.5;color:var(--ink)}
+.pp b{font-family:var(--serif);font-weight:500;font-size:1.2rem;display:block;line-height:1.2}
+.pp .pp-ic{font-size:1.5rem;line-height:1;margin-bottom:6px}
+.pp small{display:block;color:var(--rose);font-family:var(--hand);font-size:1.2rem;margin-top:2px}
+.pp p{margin:6px 0 0!important;color:var(--ink-2);overflow-wrap:anywhere}
+.pp-a{display:flex;gap:6px;margin-top:12px}
+.pp-a button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font-size:.82rem;color:var(--wine)}
+.pp-a button:hover{background:var(--wine);color:#fff;border-color:var(--wine)}
+.pform{display:grid;gap:8px;min-width:220px}
+.pform .pf-row{display:flex;gap:6px}
+.pform select{width:auto;flex:none;padding:9px 8px}
+.pform input,.pform select,.pform textarea{font:inherit;font-size:.95rem;border:1px solid var(--line);border-radius:12px;padding:9px 11px;background:#fff;color:var(--ink);width:100%}
+.pform .pf-row input{flex:1;min-width:0}
+.pform textarea{resize:vertical}
+.pform .btn{padding:10px 16px;font-size:.92rem}
+.places h4{font-family:var(--serif);font-weight:400;font-size:1.45rem;margin-bottom:14px}
+.places h4 span{font-family:var(--sans);font-size:.85rem;color:var(--muted)}
+#placeList{display:grid;gap:8px;max-height:520px;overflow:auto;padding-right:2px}
+.pl{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;padding:12px 14px;border-radius:16px;background:#fff;border:1px solid var(--line);transition:.2s}
+.pl:hover{border-color:rgba(125,22,49,.4);transform:translateX(3px)}
+.pl .em{font-size:1.3rem;width:28px;text-align:center;flex:none;line-height:1.3}
+.pl b{display:block;font-weight:600;line-height:1.35}
+.pl small{color:var(--muted);font-size:.84rem;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:230px}
+@media(max-width:900px){.mapbox{grid-template-columns:1fr}#map{height:440px}#placeList{max-height:none}}
+@media(max-width:420px){.map-tools .btn{flex:1}}
+
 /* reveal */
 .rv{opacity:0;transform:translateY(28px);transition:opacity 1s,transform 1s cubic-bezier(.2,.8,.2,1)}
 .rv.in{opacity:1;transform:none}
@@ -340,6 +382,7 @@ footer{position:relative;z-index:1;background:var(--wine-2);color:#fbeee8;text-a
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 </head>
 <body class="locked">
 
@@ -371,7 +414,7 @@ footer{position:relative;z-index:1;background:var(--wine-2);color:#fbeee8;text-a
 
 <nav class="nav" id="nav">
   <a href="#top" class="logo">♥ my dva</a>
-  <a href="#spolu">Spolu</a><a href="#pribeh">Příběh</a><a href="#osa">Osa</a><a href="#kalendar">Kalendář</a><a href="#plany">Plány</a><a href="#galerie">Galerie</a><a href="#vzkaz">Vzkaz</a><a href="#date" class="cta">Domluvit date</a>
+  <a href="#spolu">Spolu</a><a href="#pribeh">Příběh</a><a href="#osa">Osa</a><a href="#kalendar">Kalendář</a><a href="#plany">Plány</a><a href="#mapa">Mapa</a><a href="#galerie">Galerie</a><a href="#vzkaz">Vzkaz</a><a href="#date" class="cta">Domluvit date</a>
 </nav>
 
 <!-- ========== ÚVOD ========== -->
@@ -537,11 +580,38 @@ footer{position:relative;z-index:1;background:var(--wine-2);color:#fbeee8;text-a
   </div>
 </section>
 
-<!-- ========== 06 GALERIE ========== -->
-<section class="sec" id="galerie" style="padding-top:0">
+<!-- ========== 06 MAPA ========== -->
+<section class="sec" id="mapa" style="padding-top:0">
   <div class="wrap">
     <header class="sh rv">
       <span class="no">06</span>
+      <div class="kick">kde všude jsme byli</div>
+      <h2>Naše <em>mapa</em></h2>
+      <p>Klikni kamkoli do mapy, zapíchni špendlík a napiš, co se tam stalo.</p>
+    </header>
+    <div class="mapbox rv">
+      <div class="card map-card">
+        <form class="map-tools" id="mapSearch" autocomplete="off">
+          <input name="q" placeholder="Najít místo… (např. Lemberk)" aria-label="Hledat místo">
+          <button class="btn">Najít</button>
+          <button class="btn ghost" type="button" id="mapLocate" title="Moje poloha">📍 Kde jsem</button>
+        </form>
+        <div id="map" aria-label="Mapa našich míst"></div>
+      </div>
+      <div class="card places">
+        <h4>📌 Naše místa <span id="placeCount"></span></h4>
+        <div id="placeList"></div>
+      </div>
+    </div>
+    <p class="local-note sync-note">Ukládá se jen v tomhle prohlížeči.</p>
+  </div>
+</section>
+
+<!-- ========== 07 GALERIE ========== -->
+<section class="sec" id="galerie" style="padding-top:0">
+  <div class="wrap">
+    <header class="sh rv">
+      <span class="no">07</span>
       <div class="kick">momentky</div>
       <h2>Naše výstava <em>unikátů</em></h2>
     </header>
@@ -570,7 +640,7 @@ footer{position:relative;z-index:1;background:var(--wine-2);color:#fbeee8;text-a
 <section class="sec" id="vzkaz" style="padding-top:0">
   <div class="wrap">
     <header class="sh rv">
-      <span class="no">07</span>
+      <span class="no">08</span>
       <div class="kick">jen pro mě</div>
       <h2>Kniha <em>návštěv</em></h2>
     </header>
@@ -600,7 +670,7 @@ footer{position:relative;z-index:1;background:var(--wine-2);color:#fbeee8;text-a
 <section class="sec" id="date" style="padding-top:0">
   <div class="wrap">
     <header class="sh rv">
-      <span class="no">08</span>
+      <span class="no">09</span>
       <div class="kick">jedna pozvánka</div>
       <h2>Domluvit <em>date</em></h2>
     </header>
@@ -677,6 +747,7 @@ footer{position:relative;z-index:1;background:var(--wine-2);color:#fbeee8;text-a
 </div>
 <div class="toast" id="toast" role="status"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 /* ===== pomocné ===== */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -705,12 +776,21 @@ const SEED={
     {id:'p3',icon:'🎵',text:'Jít spolu na koncert',done:false},
     {id:'p4',icon:'🍝',text:'Uvařit spolu romantickou večeři',done:false}
   ],
-  gb:[]
+  gb:[],
+  places:[
+    {id:'m1',lat:50.7360,lng:15.7398,icon:'🏔️',title:'Východ slunce na Sněžce',date:'2026-07-19',note:'Nejhezčí ráno.'},
+    {id:'m2',lat:50.7840,lng:14.7960,icon:'🎬',title:'Za tebou na Lemberk',date:'2026-05-29',note:'Praxe, kino a přespávačka.'},
+    {id:'m3',lat:50.8710,lng:14.8237,icon:'⭐',title:'Trojmezí',date:'2026-05-29',note:'Česko – Polsko – Německo'},
+    {id:'m4',lat:50.0875,lng:14.4213,icon:'🎵',title:'Majáles v Praze',date:'2026-04-30',note:''},
+    {id:'m5',lat:50.7325,lng:14.9846,icon:'♥',title:'Ještěd',date:'',note:''},
+    {id:'m6',lat:35.9375,lng:14.3754,icon:'✈️',title:'Malta',date:'',note:'6 týdnů daleko od sebe.'}
+  ]
 };
 let DB=null;
 try{DB=JSON.parse(localStorage.getItem(SKEY))}catch(e){}
 if(!DB||!Array.isArray(DB.events))DB=JSON.parse(JSON.stringify(SEED));
 DB.gb=DB.gb||[];
+if(!Array.isArray(DB.places))DB.places=JSON.parse(JSON.stringify(SEED.places));
 try{const old=JSON.parse(localStorage.getItem('gbSent')||'[]');if(old.length&&!DB.gb.length)DB.gb=old.map((m,i)=>({id:'g'+i,...m}));}catch(e){}
 function save(){try{localStorage.setItem(SKEY,JSON.stringify(DB));return true}catch(e){toast('Prohlížeč nedovolil uložit ☹');return false}}
 /* sdílené ukládání (Firebase) – když není nastavené, ukládá se jen v prohlížeči */
@@ -946,14 +1026,15 @@ window.addEventListener('pw-ok',async e=>{
       let synced=false;try{synced=localStorage.getItem(FLAG)==='1'}catch(_){}
       if(first&&!synced){
         first=false;
-        const up={};['events','plans','gb'].forEach(k=>DB[k].forEach(it=>{if(!(v[k]&&v[k][it.id]))up[k+'/'+it.id]=clean(it)}));
+        const up={};['events','plans','gb','places'].forEach(k=>DB[k].forEach(it=>{if(!(v[k]&&v[k][it.id]))up[k+'/'+it.id]=clean(it)}));
         if(Object.keys(up).length){update(ref(db,base),up).then(()=>{try{localStorage.setItem(FLAG,'1')}catch(_){}});return}
       }
       first=false;try{localStorage.setItem(FLAG,'1')}catch(_){}
+      if(!(v.seeded&&v.seeded.places)){const up={'seeded/places':true};if(!v.places)DB.places.forEach(it=>{up['places/'+it.id]=clean(it)});update(ref(db,base),up);return}
       const arr=k=>Object.entries(v[k]||{}).map(([id,o])=>({...o,id}));
-      DB.events=arr('events');DB.plans=arr('plans');DB.gb=arr('gb');save();
+      DB.events=arr('events');DB.plans=arr('plans');DB.gb=arr('gb');DB.places=arr('places');save();
       Sync.on=true;setSyncNote('☁︎ Synchronizováno – vidíte to oba ♥');
-      window.renderCal&&renderCal();window.renderPlans&&renderPlans();window.renderGb&&renderGb();
+      window.renderCal&&renderCal();window.renderPlans&&renderPlans();window.renderGb&&renderGb();window.renderMap&&renderMap();
     },err=>{console.warn(err);Sync.on=false;setSyncNote('Nepodařilo se připojit – ukládá se jen tady.')});
   }catch(err){console.warn(err);setSyncNote('Nepodařilo se připojit – ukládá se jen tady.')}
 });
@@ -989,6 +1070,98 @@ window.addEventListener('pw-ok',async e=>{
   }
   $('#surpriseBtn').addEventListener('click',()=>{burst();setTimeout(()=>burst(),350);modal.classList.add('open')});
   modal.addEventListener('click',e=>{if(e.target===modal||e.target.classList.contains('close'))modal.classList.remove('open')});
+})();
+
+/* ===== mapa ===== */
+(()=>{
+  if(!window.L){$('#map').innerHTML='<p class="empty" style="padding:20px">Mapu se nepodařilo načíst.</p>';return}
+  const DS=new Intl.DateTimeFormat('cs-CZ',{day:'numeric',month:'long',year:'numeric'});
+  const ICONS=['♥','💋','🏠','☕','🍝','🎬','🎵','🏔️','🌊','🌳','✈️','🎉','⭐','📸'];
+  const map=L.map('map',{scrollWheelZoom:false,zoomControl:true,worldCopyJump:true}).setView([50.3,15.2],7);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'}).addTo(map);
+  map.on('focus click',()=>map.scrollWheelZoom.enable());map.on('blur mouseout',()=>map.scrollWheelZoom.disable());
+  const layer=L.layerGroup().addTo(map),markers={};let tmp=null,fitted=false;
+  const icon=(ic,cls)=>L.divIcon({className:'pin-wrap',html:'<div class="pin '+(cls||'')+'"><span>'+esc(ic||'♥')+'</span></div>',iconSize:[38,38],iconAnchor:[19,38],popupAnchor:[0,-36]});
+  const POP={className:'love-pop',maxWidth:270,minWidth:230,autoPanPadding:[30,80]};
+  function view(p){
+    return '<div class="pp"><div class="pp-ic">'+esc(p.icon||'♥')+'</div><b>'+esc(p.title)+'</b>'+(p.date?'<small>'+DS.format(pISO(p.date))+'</small>':'')+
+      (p.note?'<p>'+esc(p.note)+'</p>':'')+'<div class="pp-a"><button type="button" data-pa="edit" data-id="'+p.id+'">✎ Upravit</button><button type="button" data-pa="del" data-id="'+p.id+'">× Smazat</button></div></div>';
+  }
+  function formHtml(p){
+    return '<form class="pp pform" data-id="'+(p.id||'')+'" data-lat="'+p.lat+'" data-lng="'+p.lng+'"><b>'+(p.id?'Upravit místo':'Nové místo ♥')+'</b>'+
+      '<div class="pf-row"><select name="icon" aria-label="Ikonka">'+ICONS.map(i=>'<option'+(i===(p.icon||'♥')?' selected':'')+'>'+i+'</option>').join('')+'</select>'+
+      '<input name="title" required maxlength="60" placeholder="Třeba: První pusa" value="'+esc(p.title||'')+'"></div>'+
+      '<input type="date" name="date" value="'+esc(p.date||'')+'" aria-label="Datum">'+
+      '<textarea name="note" rows="2" maxlength="300" placeholder="Pár slov, ať si to pamatujeme…">'+esc(p.note||'')+'</textarea>'+
+      '<button class="btn">Uložit špendlík ♥</button></form>';
+  }
+  function clearTmp(){if(tmp){map.removeLayer(tmp);tmp=null}}
+  function newAt(ll,title){
+    clearTmp();
+    tmp=L.marker(ll,{icon:icon('+','new')}).addTo(map).bindPopup(formHtml({lat:(+ll.lat).toFixed(6),lng:(+ll.lng).toFixed(6),title:title||''}),POP).openPopup();
+    tmp.on('popupclose',()=>setTimeout(clearTmp,0));
+  }
+  function render(){
+    layer.clearLayers();for(const k in markers)delete markers[k];
+    DB.places.forEach(p=>{markers[p.id]=L.marker([p.lat,p.lng],{icon:icon(p.icon),title:p.title,riseOnHover:true}).bindPopup(view(p),POP).addTo(layer)});
+    const list=DB.places.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+    $('#placeCount').textContent='('+list.length+')';
+    $('#placeList').innerHTML=list.length?list.map(p=>'<button type="button" class="pl" data-id="'+p.id+'"><span class="em">'+esc(p.icon||'♥')+'</span><span><b>'+esc(p.title)+'</b><small>'+
+      [p.date?DS.format(pISO(p.date)):'',p.note||''].filter(Boolean).map(esc).join(' · ')+'</small></span></button>').join('')
+      :'<p class="empty">Zatím žádná místa. Klikni do mapy a přidej první špendlík ♥</p>';
+    if(!fitted&&DB.places.length){fitted=true;const pts=DB.places.filter(p=>p.lat>40);map.fitBounds(L.latLngBounds((pts.length?pts:DB.places).map(p=>[p.lat,p.lng])).pad(.25))}
+  }
+  map.on('click',e=>newAt(e.latlng));
+  map.on('popupopen',e=>{
+    const c=e.popup.getElement(),f=c.querySelector('.pform');
+    if(f){
+      setTimeout(()=>f.elements.title.focus(),60);
+      f.onsubmit=ev=>{
+        ev.preventDefault();const el=f.elements;
+        const v={lat:+f.dataset.lat,lng:+f.dataset.lng,icon:el.icon.value,title:el.title.value.trim(),date:el.date.value,note:el.note.value.trim()};
+        if(!v.title)return;
+        let it=f.dataset.id&&DB.places.find(x=>x.id===f.dataset.id);
+        if(it)Object.assign(it,v);else{it={id:uid('m'),...v};DB.places.push(it)}
+        Sync.put('places',it);map.closePopup();clearTmp();render();
+        setTimeout(()=>markers[it.id]&&markers[it.id].openPopup(),50);
+        toast(f.dataset.id?'Místo upraveno ✎':'Špendlík zapíchnutý ♥');
+        if(!f.dataset.id){const pt=map.latLngToContainerPoint([it.lat,it.lng]),r=$('#map').getBoundingClientRect();window.burst&&window.burst(r.left+pt.x,r.top+pt.y,50)}
+      };
+    }
+    c.querySelectorAll('[data-pa]').forEach(b=>b.onclick=()=>{
+      const it=DB.places.find(x=>x.id===b.dataset.id);if(!it)return;
+      if(b.dataset.pa==='del'){if(!confirm('Smazat místo „'+it.title+'"?'))return;DB.places=DB.places.filter(x=>x!==it);Sync.del('places',it.id);map.closePopup();render();toast('Místo smazáno')}
+      else{map.closePopup();L.popup(POP).setLatLng([it.lat,it.lng]).setContent(formHtml(it)).openOn(map)}
+    });
+  });
+  $('#placeList').addEventListener('click',e=>{
+    const b=e.target.closest('.pl');if(!b)return;const it=DB.places.find(x=>x.id===b.dataset.id);if(!it)return;
+    $('#map').scrollIntoView({behavior:'smooth',block:'center'});
+    map.flyTo([it.lat,it.lng],Math.max(map.getZoom(),13),{duration:1});
+    map.once('moveend',()=>markers[it.id]&&markers[it.id].openPopup());
+  });
+  $('#mapSearch').addEventListener('submit',async e=>{
+    e.preventDefault();const q=e.target.q.value.trim();if(!q)return;
+    const btn=e.target.querySelector('.btn');btn.disabled=true;
+    try{
+      const r=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=cs&q='+encodeURIComponent(q));
+      const j=await r.json();
+      if(!j.length){toast('Tohle místo jsem nenašel ☹');return}
+      const ll=L.latLng(+j[0].lat,+j[0].lon);
+      map.flyTo(ll,14,{duration:1.2});map.once('moveend',()=>newAt(ll,q));
+    }catch(err){toast('Hledání teď nejde, zkus to znovu')}
+    finally{btn.disabled=false}
+  });
+  $('#mapLocate').onclick=()=>{
+    if(!navigator.geolocation){toast('Prohlížeč neumí zjistit polohu');return}
+    navigator.geolocation.getCurrentPosition(pos=>{const ll=L.latLng(pos.coords.latitude,pos.coords.longitude);map.flyTo(ll,16,{duration:1.2});map.once('moveend',()=>newAt(ll))},
+      ()=>toast('Polohu se nepodařilo zjistit'),{enableHighAccuracy:true,timeout:10000});
+  };
+  window.renderMap=render;
+  render();
+  addEventListener('unlocked',()=>setTimeout(()=>map.invalidateSize(),50));
+  new IntersectionObserver(es=>es.forEach(x=>x.isIntersecting&&map.invalidateSize())).observe($('#map'));
 })();
 
 /* ===== lightbox ===== */
