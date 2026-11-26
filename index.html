@@ -317,6 +317,7 @@ footer{position:relative;z-index:1;background:var(--wine-2);color:#fbeee8;text-a
 .map-tools .btn{padding:11px 18px}
 #map{height:540px;border-radius:18px;overflow:hidden;border:1px solid var(--line);isolation:isolate;z-index:0;background:var(--paper-2);cursor:crosshair}
 .leaflet-container{font-family:var(--sans)}
+#map .leaflet-tile-pane{filter:saturate(.7) sepia(.14) brightness(1.02)}
 .pin-wrap{background:none;border:0}
 .pin{width:38px;height:38px;border-radius:50% 50% 50% 0;background:linear-gradient(135deg,#e2607b,var(--wine));transform:rotate(-45deg);display:grid;place-items:center;border:2px solid #fff;box-shadow:0 8px 16px -6px rgba(60,20,30,.7);transition:transform .2s}
 .pin span{transform:rotate(45deg);font-size:16px;line-height:1}
@@ -1078,8 +1079,8 @@ window.addEventListener('pw-ok',async e=>{
   const DS=new Intl.DateTimeFormat('cs-CZ',{day:'numeric',month:'long',year:'numeric'});
   const ICONS=['♥','💋','🏠','☕','🍝','🎬','🎵','🏔️','🌊','🌳','✈️','🎉','⭐','📸'];
   const map=L.map('map',{scrollWheelZoom:false,zoomControl:true,worldCopyJump:true}).setView([50.3,15.2],7);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',
-    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'}).addTo(map);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
   map.on('focus click',()=>map.scrollWheelZoom.enable());map.on('blur mouseout',()=>map.scrollWheelZoom.disable());
   const layer=L.layerGroup().addTo(map),markers={};let tmp=null,fitted=false;
   const icon=(ic,cls)=>L.divIcon({className:'pin-wrap',html:'<div class="pin '+(cls||'')+'"><span>'+esc(ic||'♥')+'</span></div>',iconSize:[38,38],iconAnchor:[19,38],popupAnchor:[0,-36]});
